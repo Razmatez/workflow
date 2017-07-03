@@ -128,6 +128,64 @@ export class ElmsApiService {
                     .catch(this.handleError);
   }
 
+  getCOCostCentres(
+    skip = this.skip,
+    limit = this.limit,
+    contractOrderID
+  ): Observable<any> {
+    const config = new Configuration();
+
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${config.token}`
+    });
+
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.get(`${config.serverWithApiUrl}contractorders/${contractOrderID}/costcentres?skip=${skip}&limit=${limit}`, options)
+                    .map(this.extractDataGeneric)
+                    .catch(this.handleError);
+  }
+
+  getCOPositions(
+    skip = this.skip,
+    limit = this.limit,
+    contractOrderID
+  ): Observable<any> {
+    const config = new Configuration();
+
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${config.token}`
+    });
+
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.get(`${config.serverWithApiUrl}contractorders/${contractOrderID}/positions?skip=${skip}&limit=${limit}`, options)
+                    .map(this.extractDataGeneric)
+                    .catch(this.handleError);
+  }
+
+  getCOPRateGroups(
+    skip = this.skip,
+    limit = this.limit,
+    contractOrderID,
+    positionID
+  ): Observable<any> {
+    const config = new Configuration();
+
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${config.token}`
+    });
+
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.get(`${config.serverWithApiUrl}contractorders/${contractOrderID}/positions/${positionID}/rategroups?skip=${skip}&limit=${limit}`, options)
+                    .map(this.extractDataGeneric)
+                    .catch(this.handleError);
+  }
+
   private extractDataEmployee(res: Response) {
     let body: any;
     body = res.json();
@@ -153,7 +211,6 @@ export class ElmsApiService {
   private extractDataGeneric(res: Response) {
     let body: any;
     body = res.json();
-    console.log(body);
 
     return body || { result: null, total: 0 };
   }
@@ -168,7 +225,7 @@ export class ElmsApiService {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-    console.error(errMsg);
+
     return Observable.throw(errMsg);
   }
 }

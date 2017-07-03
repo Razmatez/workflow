@@ -109,7 +109,8 @@ export class WorkflowEmployeeComponent implements OnInit {
                 'BillValue': 0,
                 'Breakdown': []
             },
-            'contractOrderEmployeeDetails': this.employee.coeDetails
+            'contractOrderEmployeeDetails': this.employee.coeDetails,
+            'Breakdown': {}
           })
       }
       if ( i === count - 1 ) {

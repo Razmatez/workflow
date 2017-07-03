@@ -1,0 +1,15 @@
+.tr-right-border {
+  border-left: 3px solid #CCC;
+}
+
+.Approved {
+  border-left-color: gold;
+}
+
+.Authorised {
+  border-left-color: skyblue;
+}
+
+.Exported {
+  border-left-color: lime;
+}

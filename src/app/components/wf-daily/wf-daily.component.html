@@ -1,5 +1,7 @@
 <div *ngIf="timesheetsLoading; then loader else times"></div>
 
+<p *ngIf="errorMessage">{{errorMessage}}</p>
+
 <ng-template #loader>
   <div>
     <table [ngClass]="tableClass">
@@ -36,7 +38,7 @@
     <table [ngClass]="tableClass">
       <tr>
         <th></th>
-        <th>status</th>
+        <th>selected</th>
         <th>labour date</th>
         <th>Start</th>
         <th>Break</th>
@@ -49,21 +51,59 @@
         <th>Bill value</th>
         <th>Pay value</th>
       </tr>
-      <tr *ngFor="let t of timesheets " (click)='selectDay(t)'>
+      <tr *ngFor="let t of timesheets " (click)='selectDay(t)' [ngClass]="t.Breakdown | timesheetStatus" class="tr-right-border">
         <td>
           <a md-button (click)="openDialog(t)">edit</a>
         </td>
-        <td>{{ t.timesheet.LockBatchID }}</td>
+        <td>{{ t.selected }}</td>
         <td>{{ t.timesheet.Date | date:"EEE dd/MM/yyyy" }}</td>
-        <td>{{ t.timesheet.Date | date:"HH:mm" }}</td>
-        <td>{{ 0 }}</td>
-        <td>{{ t.timesheet.Date | date:"HH:mm" }}</td>
-        <td>{{ t.contractOrderEmployeeDetails.costCentreName }}</td>
-        <td>{{ t.contractOrderEmployeeDetails.position }}</td>
-        <td>{{ t.contractOrderEmployeeDetails.contractOrderPositionRateGroup }}</td>
+        <td *ngIf="t.Breakdown">{{ t.Breakdown.strS }}</td>
+        <td *ngIf="t.Breakdown">{{ t.Breakdown.strB }}</td>
+        <td *ngIf="t.Breakdown">{{ t.Breakdown.strF }}</td>
+        <td *ngIf="!t.Breakdown"></td>
+        <td *ngIf="!t.Breakdown"></td>
+        <td *ngIf="!t.Breakdown"></td>
+        <!-- <td *ngIf="!selectedDay">{{ t.contractOrderEmployeeDetails.costCentreName }}</td>
+        <td *ngIf="(selectedDay && !t.selected)">{{ t.contractOrderEmployeeDetails.contractOrderCostCentreID }}</td> -->
+        <td *ngIf="t.contractOrderEmployeeDetails && costCentres">
+          <md-select
+            placeholder="Cost centre"
+            name="CostCentre"
+            floatPlaceholder="never"
+            [(ngModel)]="t.contractOrderEmployeeDetails.contractOrderCostCentreID"
+            (change)="timesheetChanged(t, 'costCentreID', t.contractOrderEmployeeDetails.contractOrderCostCentreID)">
+            <md-option *ngFor="let c of costCentres[t.contractOrderEmployeeDetails.contractOrderID]" [value]="c.ContractOrderCostCentreID">
+              {{c.CostCentreName}}
+            </md-option>
+          </md-select>
+        </td>
+        <td *ngIf="t.contractOrderEmployeeDetails && positions">
+          <md-select
+            placeholder="Position"
+            name="Position"
+            floatPlaceholder="never"
+            [(ngModel)]="t.contractOrderEmployeeDetails.contractOrderPositionID"
+            (change)="timesheetChanged(t, 'positionID', t.contractOrderEmployeeDetails.contractOrderPositionID)">
+            <md-option *ngFor="let p of positions[t.contractOrderEmployeeDetails.contractOrderID]" [value]="p.ContractOrderPositionID">
+              {{p.Position}}
+            </md-option>
+          </md-select>
+        </td>
+        <td *ngIf="t.contractOrderEmployeeDetails && rategroups">
+          <md-select
+            placeholder="Rate group"
+            name="PRateGroup"
+            floatPlaceholder="never"
+            [(ngModel)]="t.contractOrderEmployeeDetails.contractOrderPositionRateGroupID"
+            (change)="timesheetChanged(t, 'positionRateGroupID', t.contractOrderEmployeeDetails.contractOrderPositionRateGroupID)">
+            <md-option *ngFor="let r of rategroups[t.contractOrderEmployeeDetails.contractOrderPositionID]" [value]="r.ContractOrderPositionRateGroupID">
+              {{r.ContractOrderPositionRateGroup}}
+            </md-option>
+          </md-select>
+        </td>
         <td>{{ t.contractOrderEmployeeDetails.workgroup }}</td>
         <td *ngFor="let rt of columnHeaders">
-          {{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}
+          <span *ngIf="!t.selected">{{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}</span>
         </td>
         <td>{{ t.Total.BillValue | currency:'ZAR':true }}</td>
         <td>{{ t.Total.PayValue | currency:'ZAR':true }}</td>
@@ -71,3 +111,5 @@
     </table>
   </div>
 </ng-template>
+
+<p *ngIf="selectedDay"> Selected value: {{selectedDay.contractOrderEmployeeDetails.contractOrderCostCentreID}} </p>

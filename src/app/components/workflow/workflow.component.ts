@@ -99,7 +99,6 @@ export class WorkflowComponent implements OnInit {
   reformatEmployees() {
     const count = this.wfEmployees.length;
     for (let i = 0; i < count; i++) {
-      console.log(this.wfEmployees[i].contractorderEmployeeID);
 
       this.elmsApi.getContractOrderEmployee(this.skip, this.limit, this.wfEmployees[i].contractorderEmployeeID)
         .subscribe(
@@ -112,8 +111,6 @@ export class WorkflowComponent implements OnInit {
 
             if (i === count - 1) {
               this.wfEmployeesLoading = false;
-              console.log('reformat done');
-              console.log(this.wfEmployees);
             }
           },
           error =>  this.errorMessage = <any>error);
