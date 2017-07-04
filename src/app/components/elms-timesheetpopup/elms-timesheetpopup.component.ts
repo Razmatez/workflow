@@ -26,7 +26,12 @@ export class ElmsTimesheetpopupComponent implements OnInit {
       }
     }
 
-    this.popupUrl = `http://172.18.2.97/Timesheets/TimesheetPopUp.aspx?ContractOrderEmployeeID=${this.contractOrderEmployeeID}&ToTime=${this.period}&Token=${this.localStorageService.get('token-elms')}`;
+    this.popupUrl = `http://172.18.2.97/Timesheets/TimesheetPopUp.aspx`;
+    this.popupUrl += `?ContractOrderEmployeeID=${this.contractOrderEmployeeID}`
+    this.popupUrl += `&ToTime=${this.period}`
+    this.popupUrl += `&Token=${this.localStorageService.get('token-elms')}`;
+
+    console.log(this.popupUrl);
   }
 
 }

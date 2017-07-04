@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 
 @Component({
@@ -7,6 +7,7 @@ import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  @Output() eventAddEmployee = new EventEmitter<string>();
 
   constructor(public snackBar: MdSnackBar) { }
 
@@ -20,7 +21,8 @@ export class HeaderComponent implements OnInit {
   }
 
   addEmployee() {
-    const snackRef = this.snackBar.open('Adding missing employees is not yet implemented.', null, {
+    this.eventAddEmployee.emit('open');
+    const snackRef = this.snackBar.open('This should open up the add employee screen for you.', null, {
       duration: 2000
     })
   }

@@ -1,7 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { WorkflowComponent } from '../Workflow/workflow.component';
-import { WfDailyComponent } from '../wf-daily/wf-daily.component';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 @Component({
@@ -10,11 +7,11 @@ import { LocalStorageService } from 'angular-2-local-storage';
   styleUrls: ['./elms-place-employee.component.css']
 })
 export class ElmsPlaceEmployeeComponent implements OnInit {
+  @Output() closeComponent = new EventEmitter<string>();
   @Input() structureID: number;
-  popupUrl: string;
+  url: string;
 
   constructor(
-    public dialogRef: MdDialogRef<WfDailyComponent>,
     private localStorageService: LocalStorageService) { }
 
   ngOnInit() {
@@ -24,7 +21,13 @@ export class ElmsPlaceEmployeeComponent implements OnInit {
       }
     }
 
-    this.popupUrl = `http://172.18.2.97/HR/WFContractOrder.aspx?StructureID=${this.structureID}&Token=${this.localStorageService.get('token-elms')}`;
+    this.url = `http://172.18.2.97/HR/WFContractOrder.aspx?StructureID=${this.structureID}&Token=${this.localStorageService.get('token-elms')}`;
+
+    console.log(this.url);
+  }
+
+  close() {
+    this.closeComponent.emit('elms-place-employee');
   }
 
 }
