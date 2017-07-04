@@ -6,7 +6,6 @@
   <div>
     <table [ngClass]="tableClass">
       <tr>
-        <th>status</th>
         <th>labour date</th>
         <th>Start</th>
         <th>Break</th>
@@ -38,7 +37,6 @@
     <table [ngClass]="tableClass">
       <tr>
         <th></th>
-        <th>selected</th>
         <th>labour date</th>
         <th>Start</th>
         <th>Break</th>
@@ -55,14 +53,13 @@
         <td>
           <a md-button (click)="openDialog(t)">edit</a>
         </td>
-        <td>{{ t.selected }}</td>
         <td>{{ t.timesheet.Date | date:"EEE dd/MM/yyyy" }}</td>
         <td *ngIf="t.Breakdown">{{ t.Breakdown.strS }}</td>
         <td *ngIf="t.Breakdown">{{ t.Breakdown.strB }}</td>
         <td *ngIf="t.Breakdown">{{ t.Breakdown.strF }}</td>
-        <td *ngIf="!t.Breakdown"></td>
-        <td *ngIf="!t.Breakdown"></td>
-        <td *ngIf="!t.Breakdown"></td>
+        <td *ngIf="!t.Breakdown">00:00</td>
+        <td *ngIf="!t.Breakdown">00:00</td>
+        <td *ngIf="!t.Breakdown">00:00</td>
         <!-- <td *ngIf="!selectedDay">{{ t.contractOrderEmployeeDetails.costCentreName }}</td>
         <td *ngIf="(selectedDay && !t.selected)">{{ t.contractOrderEmployeeDetails.contractOrderCostCentreID }}</td> -->
         <td *ngIf="t.contractOrderEmployeeDetails && costCentres">
@@ -102,9 +99,17 @@
           </md-select>
         </td>
         <td>{{ t.contractOrderEmployeeDetails.workgroup }}</td>
+
         <td *ngFor="let rt of columnHeaders">
-          <span *ngIf="!t.selected">{{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}</span>
+          <ng-container *ngIf="!t.selected">{{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}</ng-container>
+          <md-input-container
+            *ngIf="t.selected"
+            floatPlaceholder="never"
+            (change)="changeTotal(rt)" >
+            <input mdInput placeholder="hh:mm" [(ngModel)]="time[rt.RateTypeID]">
+          </md-input-container>
         </td>
+
         <td>{{ t.Total.BillValue | currency:'ZAR':true }}</td>
         <td>{{ t.Total.PayValue | currency:'ZAR':true }}</td>
       </tr>
@@ -112,4 +117,4 @@
   </div>
 </ng-template>
 
-<p *ngIf="selectedDay"> Selected value: {{selectedDay.contractOrderEmployeeDetails.contractOrderCostCentreID}} </p>
+<button (click)="saveTimesheetChanges()">save changes</button>

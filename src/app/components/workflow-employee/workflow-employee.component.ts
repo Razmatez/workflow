@@ -109,8 +109,12 @@ export class WorkflowEmployeeComponent implements OnInit {
                 'BillValue': 0,
                 'Breakdown': []
             },
-            'contractOrderEmployeeDetails': this.employee.coeDetails,
-            'Breakdown': {}
+            'contractOrderEmployeeDetails': _.cloneDeep(this.employee.coeDetails),
+            'Breakdown': {
+              'strS': '00:00',
+              'strB': '00:00',
+              'strF': '00:00',
+            }
           })
       }
       if ( i === count - 1 ) {

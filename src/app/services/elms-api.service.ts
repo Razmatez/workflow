@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 
 import { Configuration } from './app.config';
 import { Employee } from '../models/employee';
+import { TimesheetChanges } from '../models/TimesheetChanges';
 
 @Injectable()
 export class ElmsApiService {
@@ -227,5 +228,9 @@ export class ElmsApiService {
     }
 
     return Observable.throw(errMsg);
+  }
+
+  public saveTimesheetChanges(t: TimesheetChanges) {
+    console.log(t);
   }
 }

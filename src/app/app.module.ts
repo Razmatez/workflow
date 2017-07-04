@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LocalStorageModule } from 'angular-2-local-storage';
 
 import { ElmsApiService } from './services/elms-api.service';
 
@@ -38,6 +39,7 @@ import { OrderByPipe } from './pipes/order-by.pipe';
 import { ElmsTimesheetpopupComponent } from './components/elms-timesheetpopup/elms-timesheetpopup.component';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { TimesheetStatusPipe } from './pipes/timesheet-status.pipe';
+import { ElmsPlaceEmployeeComponent } from './components/elms-place-employee/elms-place-employee.component';
 
 const appRoutes = [
   { path: 'workflows', component: WorkflowComponent }
@@ -58,7 +60,8 @@ const appRoutes = [
     OrderByPipe,
     ElmsTimesheetpopupComponent,
     SafeUrlPipe,
-    TimesheetStatusPipe
+    TimesheetStatusPipe,
+    ElmsPlaceEmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +70,10 @@ const appRoutes = [
     JsonpModule,
     RouterModule.forRoot(appRoutes),
     BrowserAnimationsModule,
+    LocalStorageModule.withConfig({
+      prefix: 'my-app',
+      storageType: 'localStorage'
+    }),
     MdToolbarModule,
     MdIconModule,
     MdInputModule,

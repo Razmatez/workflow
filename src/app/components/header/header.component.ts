@@ -24,4 +24,10 @@ export class HeaderComponent implements OnInit {
       duration: 2000
     })
   }
+
+  saveTimesheetChanges() {
+    const snackRef = this.snackBar.open('Saving timesheets is not yet implemented.', null, {
+      duration: 2000
+    })
+  }
 }

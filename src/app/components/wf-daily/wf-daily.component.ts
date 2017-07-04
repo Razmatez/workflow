@@ -5,6 +5,11 @@ import { ElmsTimesheetpopupComponent } from '../elms-timesheetpopup/elms-timeshe
 
 import { ElmsApiService } from '../../services/elms-api.service';
 
+import { TimesheetChanges, TimesheetTotal } from '../../models/TimesheetChanges';
+import { rateType } from '../../models/rateType';
+
+import * as _ from 'lodash';
+
 @Component({
   selector: 'app-wf-daily',
   templateUrl: './wf-daily.component.html',
@@ -41,12 +46,16 @@ export class WfDailyComponent implements OnInit {
   positions: any;
   rategroups: any;
 
+  time: any;
+
   constructor(private elmsApi: ElmsApiService, public dialog: MdDialog) { }
 
   ngOnInit() {
     this.costCentres = {};
     this.positions = {};
     this.rategroups = {};
+
+    this.time = {};
   }
 
   openDialog(t) {
@@ -74,6 +83,8 @@ export class WfDailyComponent implements OnInit {
     } else {
       t.selected = !t.selected;
     }
+
+    this.time = {};
 
     this.selectedDay = t;
     this.getCostCentres();
@@ -134,13 +145,50 @@ export class WfDailyComponent implements OnInit {
   }
 
   timesheetChanged(timesheet: any, name: string, value: any) {
-    if (!this.selectedDay.changes) {
-      this.selectedDay.changes = {};
-    }
+    this.addChangesObject();
 
     this.selectedDay.changes[name] = value;
 
     console.log(this.selectedDay.changes);
+  }
+
+  changeTotal(rt: rateType) {
+    this.addChangesObject();
+
+    const tTotal = this.selectedDay.changes.totals;
+    // console.log(tTotal);
+
+    const i = _.findIndex(tTotal, { 'rateTypeID': rt.RateTypeID });
+
+    if (i !== -1) {
+      tTotal[i].value = this.time[rt.RateTypeID];
+    } else {
+      const t = new TimesheetTotal();
+      t.rateTypeID = rt.RateTypeID;
+      t.value = this.time[rt.RateTypeID];
+
+      tTotal.push(t);
+    }
+
+    // console.log(rt);
+    // console.log(this.time);
+    console.log(this.selectedDay.changes);
+  }
+
+  addChangesObject() {
+    if (!this.selectedDay.changes) {
+      this.selectedDay.changes = new TimesheetChanges();
+      this.selectedDay.changes.timesheetID = this.selectedDay.timesheet.TimesheetID || null;
+      this.selectedDay.changes.totals = [];
+    }
+  }
+
+  saveTimesheetChanges() {
+    for (let i = 0; i < this.timesheets.length; i++) {
+      if (this.timesheets[i].changes) {
+        this.elmsApi.saveTimesheetChanges(this.timesheets[i].changes);
+      }
+    }
   }
 
 }
