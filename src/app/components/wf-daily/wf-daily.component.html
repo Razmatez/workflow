@@ -128,8 +128,8 @@
           {{ timesheets | rateGroupTotal: rt.RateTypeID | decimalToTime }}
         </td>
 
-        <td>BillVal total</td>
-        <td>PayVal total</td>
+        <td>{{ timesheets | billValueTotal | currency:'ZAR':true }}</td>
+        <td>{{ timesheets | payValueTotal | currency:'ZAR':true }}</td>
       </tr>
     </table>
   </div>

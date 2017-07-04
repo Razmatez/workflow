@@ -41,6 +41,8 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { TimesheetStatusPipe } from './pipes/timesheet-status.pipe';
 import { ElmsPlaceEmployeeComponent } from './components/elms-place-employee/elms-place-employee.component';
 import { RateGroupTotalPipe } from './pipes/rate-group-total.pipe';
+import { BillValueTotalPipe } from './pipes/bill-value-total.pipe';
+import { PayValueTotalPipe } from './pipes/pay-value-total.pipe';
 
 const appRoutes = [
   { path: 'workflows', component: WorkflowComponent }
@@ -63,7 +65,9 @@ const appRoutes = [
     SafeUrlPipe,
     TimesheetStatusPipe,
     ElmsPlaceEmployeeComponent,
-    RateGroupTotalPipe
+    RateGroupTotalPipe,
+    BillValueTotalPipe,
+    PayValueTotalPipe
   ],
   imports: [
     BrowserModule,
