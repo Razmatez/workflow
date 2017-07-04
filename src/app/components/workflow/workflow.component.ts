@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ElmsApiService } from '../../services/elms-api.service';
@@ -13,6 +13,8 @@ import * as moment from 'moment';
 })
 
 export class WorkflowComponent implements OnInit {
+  @Output() setStructureID = new EventEmitter<number>();
+
   errorMessage: string;
 
   wfInstanceId: number;
@@ -79,6 +81,7 @@ export class WorkflowComponent implements OnInit {
         result => {
           this.wfInstance = result.result[0];
           this.fillExpectedDays(this.wfInstance.calendarFrom, this.wfInstance.calanderTo);
+          this.setStructureID.emit(result.result[0].structureID);
         },
         error =>  this.errorMessage = <any>error);
   }

@@ -1,5 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,29 +6,15 @@ import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  @Output() eventAddEmployee = new EventEmitter<string>();
+  @Output() headerClick = new EventEmitter<string>();
+  @Input() buttons: any;
 
-  constructor(public snackBar: MdSnackBar) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
-  approveTimesheet() {
-    const snackRef = this.snackBar.open('Approving of timesheets is not yet implemented.', null, {
-      duration: 2000
-    })
-  }
-
-  addEmployee() {
-    this.eventAddEmployee.emit('open');
-    const snackRef = this.snackBar.open('This should open up the add employee screen for you.', null, {
-      duration: 2000
-    })
-  }
-
-  saveTimesheetChanges() {
-    const snackRef = this.snackBar.open('Saving timesheets is not yet implemented.', null, {
-      duration: 2000
-    })
+  emitHeaderEvent(event: string) {
+    this.headerClick.emit(event);
   }
 }

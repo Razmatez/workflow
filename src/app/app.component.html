@@ -1,9 +1,9 @@
-<app-header (eventAddEmployee)="eventAddEmployee($event)"></app-header>
+<app-header (headerClick)="headerClick($event)" [buttons]="headerButtons"></app-header>
 
-<app-workflow *ngIf="!addEmployee"></app-workflow>
+<app-workflow *ngIf="!addEmployee" (setStructureID)="setCurrentStructure($event)"></app-workflow>
 
 <app-elms-place-employee *ngIf="addEmployee"
-  [structureID]="7748"
+  [structureID]="structureID"
   (closeComponent)="closeComponent($event)"></app-elms-place-employee>
 
 <app-footer></app-footer>
