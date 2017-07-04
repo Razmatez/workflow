@@ -113,6 +113,24 @@
         <td>{{ t.Total.BillValue | currency:'ZAR':true }}</td>
         <td>{{ t.Total.PayValue | currency:'ZAR':true }}</td>
       </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+
+        <td *ngFor="let rt of columnHeaders">
+          {{ timesheets | rateGroupTotal: rt.RateTypeID | decimalToTime }}
+        </td>
+
+        <td>BillVal total</td>
+        <td>PayVal total</td>
+      </tr>
     </table>
   </div>
 </ng-template>

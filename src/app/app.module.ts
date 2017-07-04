@@ -40,6 +40,7 @@ import { ElmsTimesheetpopupComponent } from './components/elms-timesheetpopup/el
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { TimesheetStatusPipe } from './pipes/timesheet-status.pipe';
 import { ElmsPlaceEmployeeComponent } from './components/elms-place-employee/elms-place-employee.component';
+import { RateGroupTotalPipe } from './pipes/rate-group-total.pipe';
 
 const appRoutes = [
   { path: 'workflows', component: WorkflowComponent }
@@ -61,7 +62,8 @@ const appRoutes = [
     ElmsTimesheetpopupComponent,
     SafeUrlPipe,
     TimesheetStatusPipe,
-    ElmsPlaceEmployeeComponent
+    ElmsPlaceEmployeeComponent,
+    RateGroupTotalPipe
   ],
   imports: [
     BrowserModule,
