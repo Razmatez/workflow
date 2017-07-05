@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ElmsApiService } from '../../services/elms-api.service';
@@ -14,11 +14,15 @@ import * as moment from 'moment';
 
 export class WorkflowComponent implements OnInit {
   @Output() setStructureID = new EventEmitter<number>();
+  @Input() wfInstanceId: number;
+  @Input() wfTemplateId: number;
+  @Input() wfTrackId: number;
 
   errorMessage: string;
 
-  wfInstanceId: number;
   wfInstance: any;
+
+
   wfEmployees: Employee[];
   wfEmployeesLoading: boolean;
   wfDays: any[];
@@ -41,14 +45,13 @@ export class WorkflowComponent implements OnInit {
     this.limit = 10;
     this.wfDays = [];
 
-    const sub = this.route
-      .queryParams
-      .subscribe(params => {
-        // Defaults to 0 if no query param provided.
-        this.wfInstanceId = params['instance'];
-        this.getWFInstance();
-        this.getEmployees();
-      });
+    console.log(this.wfInstanceId);
+    console.log(this.wfTemplateId);
+
+    if (this.wfInstanceId !== -1 ) {
+      this.getWFInstance();
+      this.getEmployees();
+    }
 
     this.rateTypesLoading = true;
     this.getRatetypes();

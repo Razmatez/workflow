@@ -6,7 +6,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
+import { LocalStorageService } from 'angular-2-local-storage';
+
 import * as _ from 'lodash';
+import * as base64 from 'base64-min';
 
 import { Configuration } from './app.config';
 import { Employee } from '../models/employee';
@@ -17,12 +20,56 @@ export class ElmsApiService {
   skip: number;
   limit: number;
 
-  constructor(private http: Http) {
+  constructor(
+    private http: Http,
+    private localStorageService: LocalStorageService) {
   }
 
   onInit() {
     this.skip = 0;
     this.limit = 20;
+  }
+
+  login(
+    username: string, password: string
+  ): Observable<any> {
+
+    const authBasic = base64.encode(`${username}:${password}`);
+
+    const config = new Configuration();
+
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${authBasic}`
+    });
+
+    const options = new RequestOptions({ headers: headers });
+
+    let endpoint = `${config.serverWithApiOauthUrl}generate`;
+    endpoint += `?client_id=${config.clientid}`;
+    endpoint += `&env=${config.environment}`;
+
+    return this.http.get(endpoint, options)
+        .map(this.extractDataGeneric)
+        .catch(this.handleError);
+  }
+
+  getUser(
+    skip = this.skip,
+    limit = this.limit
+  ): Observable<any> {
+    const config = new Configuration();
+
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.localStorageService.get('token-elms')}`
+    });
+
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.get(`${config.serverWithApiUrl}user?skip=${skip}&limit=${limit}`, options)
+      .map(this.extractDataGeneric)
+      .catch(this.handleError);
   }
 
   getEmployees(
@@ -219,6 +266,18 @@ export class ElmsApiService {
   private handleError (error: Response | any) {
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
+
+    if (error.status === 401) {
+      errMsg = error.statusText;
+      return Observable.throw(errMsg);
+    }
+
+    if (error.status === 403) {
+      errMsg = error.statusText;
+      return Observable.throw(errMsg);
+    }
+
+    console.log(error);
     if (error instanceof Response) {
       const body = error.json() || '';
       const err = body.error || JSON.stringify(body);

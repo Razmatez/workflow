@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { LocalStorageService } from 'angular-2-local-storage';
 import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
+
+import * as base64 from 'base64-min';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +13,18 @@ import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 })
 
 export class AppComponent implements OnInit {
+  loading: boolean;
+  error: string;
+
+  loggedIn: boolean;
+
+  wfInstance: number;
+  wfTemplate: number;
+  wfTrack: number;
+  wfEmail: number;
+  wfUser: string;
+  lockUser: boolean;
+
   headerButtons: any;
   structureID: number;
 
@@ -16,15 +32,23 @@ export class AppComponent implements OnInit {
   showTimesheetPopup: boolean;
 
   constructor(
-   private localStorageService: LocalStorageService,
-   public snackBar: MdSnackBar) {
+    private route: ActivatedRoute,
+    private router: Router,
+    private localStorageService: LocalStorageService,
+    public snackBar: MdSnackBar) {
   }
 
   ngOnInit() {
+
+    this.loading = true;
+    this.error = '';
+
+    this.loggedIn = false;
+
     this.headerButtons = {
-      'save': true,
-      'add': true,
-      'approve': true,
+      'save': false,
+      'add': false,
+      'approve': false,
       'authorize': false,
       'close': false
     };
@@ -33,9 +57,129 @@ export class AppComponent implements OnInit {
     this.addEmployee = false;
     this.showTimesheetPopup = false;
 
-    if (this.localStorageService.isSupported) {
-      this.localStorageService.set('token-elms', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOiIxIiwidXNlciI6IjUxODciLCJkYXRlIjoiMTQ5OTE1Njg2MCIsImV4cCI6IjE0OTkxOTI4NjAiLCJlbnYiOiJRQV9aQSJ9.FFh71nCFoFxmex52mM1og7dQv67SgE2MfCN2ZlDBdZc');
+    if (!this.localStorageService.isSupported) {
+      this.error = 'Local storage is not supported on this device.';
+      this.error += ' Timesheets cannot be loaded on devices not supporting local storage yet.';
+      return;
     }
+
+    this.parseQueryStrings((err, res) => {
+      if (err) {
+        this.error = err;
+        return;
+      }
+
+      this.updateHeader();
+
+      const token = this.localStorageService.get('token-elms');
+      const user: any = this.localStorageService.get('user-elms');
+
+      if (user && token && (this.wfUser === null || user.username === this.wfUser)) {
+        this.loggedIn = true;
+        this.loading = false;
+      } else {
+        this.loggedIn = false;
+        this.loading = false;
+      }
+    });
+  }
+
+  newLogin(status: boolean) {
+    console.log('Logged in: ' + status);
+    const token = this.localStorageService.get('token-elms');
+    const user: any = this.localStorageService.get('user-elms');
+
+    if (user && token && (this.wfUser === null || user.username === this.wfUser)) {
+      this.loggedIn = true;
+      this.loading = false;
+    } else {
+      this.loggedIn = false;
+      this.loading = false;
+    }
+  }
+
+  updateHeader() {
+    // console.log('updateHeader: ' + this.wfTemplate);
+
+    const t: number = this.wfTemplate * 1;
+
+    switch (t) {
+      case 1:
+        // console.log('updateHeader: employee');
+        this.headerButtons = {
+          'save': false,
+          'add': true,
+          'approve': true,
+          'authorize': false,
+          'close': false
+        };
+        break;
+      case 2:
+        // console.log('updateHeader: daily');
+        this.headerButtons = {
+          'save': true,
+          'add': true,
+          'approve': true,
+          'authorize': false,
+          'close': false
+        };
+        break;
+      case 3:
+        // console.log('updateHeader: weekly');
+        this.headerButtons = {
+          'save': false,
+          'add': false,
+          'approve': false,
+          'authorize': true,
+          'close': false
+        };
+        break;
+
+      default:
+        // console.log('updateHeader: Default');
+        break;
+    }
+  }
+
+  parseQueryStrings(callback) {
+    const sub = this.route
+      .queryParams
+      .subscribe(params => {
+        // Defaults to 0 if no query param provided.
+        if (params['spPage']) {
+          this.wfInstance = base64.decode(params['spPage']);
+          // console.log('wfInstance:' + this.wfInstance);
+        }
+
+        if (params['spDept']) {
+          this.wfTemplate = base64.decode(params['spDept']);
+          // console.log('wfTemplate:' + this.wfTemplate);
+        }
+
+        if (params['spTrk']) {
+          this.wfTrack = base64.decode(params['spTrk']);
+          console.log('wfTrack:' + this.wfTrack);
+        }
+
+        if (params['spAC']) {
+          this.wfEmail = base64.decode(params['spAC']);
+          // console.log('wfEmail:' + this.wfEmail);
+        }
+
+        if (params['spUser']) {
+          this.wfUser = base64.decode(params['spUser']);
+          this.lockUser = true;
+          // console.log('wfUser:' + this.wfUser);
+        } else {
+          this.wfUser = null;
+          this.lockUser = false;
+        }
+
+        if (callback) {
+          callback(null, true);
+        }
+
+      });
   }
 
   headerClick(button: string) {
@@ -52,13 +196,7 @@ export class AppComponent implements OnInit {
         break;
       case 'close':
         this.closeComponent('all');
-        this.headerButtons = {
-          'save': true,
-          'add': true,
-          'approve': true,
-          'authorize': false,
-          'close': false
-        };
+        this.updateHeader();
         break;
       default:
         const snackRef = this.snackBar.open(`${button} is not implemented`, null, { duration: 2000 })
@@ -83,4 +221,6 @@ export class AppComponent implements OnInit {
   setCurrentStructure(sID: number) {
     this.structureID = sID;
   }
+
+
 }

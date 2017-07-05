@@ -7,5 +7,11 @@ export class Configuration {
     public apiUrl = 'api/alpha/';
     public serverWithApiUrl = this.server + this.apiUrl;
 
+    public apiOauthUrl = 'api/oauth/';
+    public serverWithApiOauthUrl = this.server + this.apiOauthUrl;
+
+    public environment = 'QA_ZA';
+    public clientid = '1';
+
     public token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOiIxIiwidXNlciI6IjUxODciLCJkYXRlIjoiMTQ5NzcwMDI3NiIsImV4cCI6IjE0OTc3MzYyNzYiLCJlbnYiOiJRQV9aQSJ9.CTXZ-DACoQ3CDWyaOSRCcl6JBMMzbE347DYl2GFTb14';
 }

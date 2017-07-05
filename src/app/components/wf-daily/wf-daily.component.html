@@ -41,11 +41,11 @@
         <th>Start</th>
         <th>Break</th>
         <th>Finish</th>
+        <th *ngFor="let rt of columnHeaders">{{ rt.Description }}</th>
         <th>Cost Centre</th>
         <th>Position</th>
         <th>Rategroup</th>
         <th>Workgroup</th>
-        <th *ngFor="let rt of columnHeaders">{{ rt.Description }}</th>
         <th>Bill value</th>
         <th>Pay value</th>
       </tr>
@@ -62,6 +62,16 @@
         <td *ngIf="!t.Breakdown">00:00</td>
         <!-- <td *ngIf="!selectedDay">{{ t.contractOrderEmployeeDetails.costCentreName }}</td>
         <td *ngIf="(selectedDay && !t.selected)">{{ t.contractOrderEmployeeDetails.contractOrderCostCentreID }}</td> -->
+
+        <td *ngFor="let rt of columnHeaders">
+          <ng-container *ngIf="!t.selected">{{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}</ng-container>
+          <md-input-container
+            *ngIf="t.selected"
+            floatPlaceholder="never"
+            (change)="changeTotal(rt)" >
+            <input mdInput placeholder="hh:mm" [(ngModel)]="time[rt.RateTypeID]">
+          </md-input-container>
+        </td>
         <td *ngIf="t.contractOrderEmployeeDetails && costCentres">
           <md-select
             placeholder="Cost centre"
@@ -100,16 +110,6 @@
         </td>
         <td>{{ t.contractOrderEmployeeDetails.workgroup }}</td>
 
-        <td *ngFor="let rt of columnHeaders">
-          <ng-container *ngIf="!t.selected">{{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}</ng-container>
-          <md-input-container
-            *ngIf="t.selected"
-            floatPlaceholder="never"
-            (change)="changeTotal(rt)" >
-            <input mdInput placeholder="hh:mm" [(ngModel)]="time[rt.RateTypeID]">
-          </md-input-container>
-        </td>
-
         <td>{{ t.Total.BillValue | currency:'ZAR':true }}</td>
         <td>{{ t.Total.PayValue | currency:'ZAR':true }}</td>
       </tr>
@@ -119,14 +119,14 @@
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
 
         <td *ngFor="let rt of columnHeaders">
           {{ timesheets | rateGroupTotal: rt.RateTypeID | decimalToTime }}
         </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
 
         <td>{{ timesheets | billValueTotal | currency:'ZAR':true }}</td>
         <td>{{ timesheets | payValueTotal | currency:'ZAR':true }}</td>

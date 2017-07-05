@@ -2,7 +2,7 @@
 
 <p class="error" *ngIf="errorMessage">{{errorMessage}}</p>
 
-<div *ngIf="rateTypesLoading; then loader else content"></div>
+<ng-container *ngIf="rateTypesLoading; then loader else content"></ng-container>
 
 <ng-template #loader>
   <md-progress-spinner
@@ -12,22 +12,40 @@
     [value]="value">
   </md-progress-spinner>
 </ng-template>
-<ng-template #content>
-  <div *ngIf="wfEmployeesLoading">
-    Employees loading
-  </div>
-  <div *ngIf="!wfEmployeesLoading">
-    <div *ngFor="let e of wfEmployees">
-      <app-workflow-employee
-        [employee]=e
-        [calendar]=wfInstance.calendarID
-        [rateTypes]=rateTypes.result
-        [wfDays]=wfDays>
-      </app-workflow-employee>
-    </div>
-  </div>
 
-  <p>Page {{ page() }} of {{ pages() }} ({{ total }} total) </p>
-  <button (click)='previous()'>previous</button>
-  <button (click)='next()'>next</button>
+<ng-template #content>
+  <ng-container *ngIf="wfEmployeesLoading; then empLoader else empContent">
+  </ng-container>
+
+  <ng-template #empLoader>
+    <p>Employees loading</p>
+  </ng-template>
+
+  <ng-template #empContent>
+
+    <ng-container *ngIf="wfTemplateId == 1"> <!-- Employee confirmation -->
+        <p>Employee Confirmations are not yet implemented.</p>
+    </ng-container>
+
+    <ng-container *ngIf="wfTemplateId == 2"> <!-- Daily timesheet -->
+      <div *ngFor="let e of wfEmployees">
+        <app-workflow-employee
+          [employee]=e
+          [calendar]=wfInstance.calendarID
+          [rateTypes]=rateTypes.result
+          [wfDays]=wfDays>
+        </app-workflow-employee>
+      </div>
+
+      <p>Page {{ page() }} of {{ pages() }} ({{ total }} total) </p>
+      <button (click)='previous()'>previous</button>
+      <button (click)='next()'>next</button>
+    </ng-container>
+
+    <ng-container *ngIf="wfTemplateId == 3"> <!-- Weekly timesheet -->
+      <p>Weekly timesheets are not yet implemented</p>
+    </ng-container>
+
+  </ng-template>
+
 </ng-template>

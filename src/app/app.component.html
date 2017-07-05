@@ -1,9 +1,25 @@
-<app-header (headerClick)="headerClick($event)" [buttons]="headerButtons"></app-header>
+<p *ngIf="error">{{error}}</p>
 
-<app-workflow *ngIf="!addEmployee" (setStructureID)="setCurrentStructure($event)"></app-workflow>
+<ng-container *ngIf="!loading">
+  <app-login
+    *ngIf="!loggedIn"
+    [wfUser]="wfUser"
+    [lockUser]="lockUser"
+    (newLogin)="newLogin($event)"></app-login>
 
-<app-elms-place-employee *ngIf="addEmployee"
-  [structureID]="structureID"
-  (closeComponent)="closeComponent($event)"></app-elms-place-employee>
+  <ng-container *ngIf="loggedIn">
+    <app-header (headerClick)="headerClick($event)" [buttons]="headerButtons"></app-header>
 
-<app-footer></app-footer>
+    <app-workflow *ngIf="wfInstance && !addEmployee"
+      [wfInstanceId]="wfInstance"
+      [wfTemplateId]="wfTemplate"
+      (setStructureID)="setCurrentStructure($event)"></app-workflow>
+
+    <app-elms-place-employee *ngIf="addEmployee"
+      [structureID]="structureID"
+      (closeComponent)="closeComponent($event)"></app-elms-place-employee>
+
+    <app-footer></app-footer>
+
+  </ng-container>
+</ng-container>

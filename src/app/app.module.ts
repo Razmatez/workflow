@@ -43,6 +43,7 @@ import { ElmsPlaceEmployeeComponent } from './components/elms-place-employee/elm
 import { RateGroupTotalPipe } from './pipes/rate-group-total.pipe';
 import { BillValueTotalPipe } from './pipes/bill-value-total.pipe';
 import { PayValueTotalPipe } from './pipes/pay-value-total.pipe';
+import { LoginComponent } from './components/login/login.component';
 
 const appRoutes = [
   { path: 'workflows', component: WorkflowComponent }
@@ -67,7 +68,8 @@ const appRoutes = [
     ElmsPlaceEmployeeComponent,
     RateGroupTotalPipe,
     BillValueTotalPipe,
-    PayValueTotalPipe
+    PayValueTotalPipe,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

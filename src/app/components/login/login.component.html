@@ -1,0 +1,15 @@
+<md-card class="example-card">
+  <md-input-container
+    class="example-full-width">
+    <input mdInput placeholder="username" [disabled]="lockUser" [(ngModel)]="wfUser">
+  </md-input-container>
+
+  <md-input-container
+    class="example-full-width">
+    <input type="password" mdInput placeholder="password" [(ngModel)]="password">
+  </md-input-container>
+  <p *ngIf="error" style="color: red;">{{error}}</p>
+  <button md-raised-button (click)="login()">Login</button>
+</md-card>
+
+<p>{{token}}</p>
