@@ -1,6 +1,4 @@
-<p *ngIf="error">{{error}}</p>
-
-<ng-container *ngIf="!loading">
+<ng-container *ngIf="!loading && !error">
   <app-login
     *ngIf="!loggedIn"
     [wfUser]="wfUser"
@@ -29,3 +27,5 @@
 
   </ng-container>
 </ng-container>
+
+<p *ngIf="error">{{error}}</p>

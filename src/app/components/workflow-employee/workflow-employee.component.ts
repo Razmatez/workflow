@@ -49,6 +49,7 @@ export class WorkflowEmployeeComponent implements OnInit {
     this.columnHeaders = [
       { 'Description': 'Normal Time', 'RateTypeID': 2 },
       { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
+      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
       { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
       { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
       { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
@@ -59,6 +60,7 @@ export class WorkflowEmployeeComponent implements OnInit {
     this.columnHeadersWeekly = [
       { 'Description': 'Normal Time', 'RateTypeID': 2 },
       { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
+      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
       { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
       { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
       { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
