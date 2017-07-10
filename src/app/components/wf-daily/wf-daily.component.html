@@ -46,8 +46,8 @@
         <th>Position</th>
         <th>Rategroup</th>
         <th>Workgroup</th>
-        <th>Bill value</th>
         <th>Pay value</th>
+        <th>Bill value</th>
       </tr>
       <tr *ngFor="let t of timesheets " (click)='selectDay(t)' [ngClass]="t.Breakdown | timesheetStatus" class="tr-right-border">
         <td>
@@ -135,4 +135,4 @@
   </div>
 </ng-template>
 
-<button (click)="saveTimesheetChanges()">save changes</button>
+<!-- <button (click)="saveTimesheetChanges()">save changes</button> -->

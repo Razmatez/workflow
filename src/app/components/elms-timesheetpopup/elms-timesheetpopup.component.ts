@@ -10,6 +10,7 @@ import { LocalStorageService } from 'angular-2-local-storage';
   templateUrl: './elms-timesheetpopup.component.html',
   styleUrls: ['./elms-timesheetpopup.component.css']
 })
+
 export class ElmsTimesheetpopupComponent implements OnInit {
   contractOrderEmployeeID: number;
   period: string;

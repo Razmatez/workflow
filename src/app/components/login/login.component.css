@@ -9,3 +9,10 @@
 .example-full-width {
   width: 100%;
 }
+
+.center {
+    margin: auto;
+    margin-top: 50px;
+    width: 400px;
+    padding: 10px;
+}

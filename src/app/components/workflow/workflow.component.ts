@@ -56,9 +56,6 @@ export class WorkflowComponent implements OnInit {
       500
     ]
 
-    console.log(this.wfInstanceId);
-    console.log(this.wfTemplateId);
-
     if (this.wfInstanceId !== -1 ) {
       this.getWFInstance();
       this.getEmployees();
@@ -95,6 +92,7 @@ export class WorkflowComponent implements OnInit {
         result => {
           this.wfInstance = result.result[0];
           this.fillExpectedDays(this.wfInstance.calendarFrom, this.wfInstance.calanderTo);
+          console.log(this.wfInstance);
           this.setStructureID.emit(result.result[0].structureID);
         },
         error =>  this.errorMessage = <any>error);
@@ -215,7 +213,6 @@ export class WorkflowComponent implements OnInit {
       }
       if ( i === count - 1 ) {
         e.timesheetsLoading = false;
-        console.log(e);
       }
     }
   }

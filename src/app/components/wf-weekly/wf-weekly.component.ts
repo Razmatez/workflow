@@ -10,6 +10,8 @@ import { rateType } from '../../models/rateType';
 
 import { Employee } from '../../models/employee';
 
+import * as moment from 'moment';
+
 @Component({
   selector: 'app-wf-weekly',
   templateUrl: './wf-weekly.component.html',
@@ -71,7 +73,7 @@ export class WfWeeklyComponent implements OnInit {
     });
 
     const coeid = this.employee.coeDetails.contractOrderEmployeeID;
-    const period = this.wfDays[0].format('DD MMM YYYY') + ' to ' + this.wfDays[0].add(7, 'day').format('DD MMM YYYY')
+    const period = moment(this.wfDays[0]).format('DD MMM YYYY') + ' to ' + moment(this.wfDays[0]).add(7, 'day').format('DD MMM YYYY')
 
     dialogRef.componentInstance.contractOrderEmployeeID = coeid
     dialogRef.componentInstance.period = period;

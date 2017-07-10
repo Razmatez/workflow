@@ -76,7 +76,10 @@ export class AppComponent implements OnInit {
 
       this.updateHeader();
 
-      const token = this.localStorageService.get('token-elms');
+      this.loggedIn = false;
+      this.loading = false;
+
+      /*const token = this.localStorageService.get('token-elms');
       const user: any = this.localStorageService.get('user-elms');
 
       if (user && token && (this.wfUser === null || user.username === this.wfUser)) {
@@ -85,7 +88,7 @@ export class AppComponent implements OnInit {
       } else {
         this.loggedIn = false;
         this.loading = false;
-      }
+      }*/
     });
   }
 
@@ -153,28 +156,28 @@ export class AppComponent implements OnInit {
         // Defaults to 0 if no query param provided.
         if (params['spPage']) {
           this.wfInstance = parseInt(atob(params['spPage']), 10);
-          // console.log('wfInstance:' + this.wfInstance);
+          console.log('wfInstance:' + this.wfInstance);
         }
 
         if (params['spDept']) {
           this.wfTemplate = parseInt(atob(params['spDept']), 10);
-          // console.log('wfTemplate:' + this.wfTemplate);
+          console.log('wfTemplate:' + this.wfTemplate);
         }
 
         if (params['spTrk']) {
           this.wfTrack = parseInt(atob(params['spTrk']), 10);
-          // console.log('wfTrack:' + this.wfTrack);
+          console.log('wfTrack:' + this.wfTrack);
         }
 
         if (params['spAC']) {
           this.wfEmail = parseInt(atob(params['spAC']), 10);
-          // console.log('wfEmail:' + this.wfEmail);
+          console.log('wfEmail:' + this.wfEmail);
         }
 
         if (params['spUser']) {
           this.wfUser = atob(params['spUser']);
           this.lockUser = true;
-          // console.log('wfUser:' + this.wfUser);
+          console.log('wfUser:' + this.wfUser);
         } else {
           this.wfUser = null;
           this.lockUser = false;

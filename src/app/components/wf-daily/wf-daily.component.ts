@@ -9,6 +9,7 @@ import { TimesheetChanges, TimesheetTotal } from '../../models/TimesheetChanges'
 import { rateType } from '../../models/rateType';
 
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-wf-daily',
@@ -66,7 +67,7 @@ export class WfDailyComponent implements OnInit {
     });
 
     const coeid = t.contractOrderEmployeeDetails.contractOrderEmployeeID;
-    const period = this.wfDays[0].format('DD MMM YYYY') + ' to ' + this.wfDays[0].add(7, 'day').format('DD MMM YYYY')
+    const period = moment(this.wfDays[0]).format('DD MMM YYYY') + ' to ' + moment(this.wfDays[0]).add(7, 'day').format('DD MMM YYYY')
 
     dialogRef.componentInstance.contractOrderEmployeeID = coeid
     dialogRef.componentInstance.period = period;
