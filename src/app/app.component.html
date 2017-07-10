@@ -10,10 +10,16 @@
   <ng-container *ngIf="loggedIn">
     <app-header (headerClick)="headerClick($event)" [buttons]="headerButtons"></app-header>
 
-    <app-workflow *ngIf="wfInstance && !addEmployee"
-      [wfInstanceId]="wfInstance"
-      [wfTemplateId]="wfTemplate"
-      (setStructureID)="setCurrentStructure($event)"></app-workflow>
+    <ng-container *ngIf="approving">
+      <p>Approving timesheets</p>
+    </ng-container>
+
+    <ng-container *ngIf="!approving">
+      <app-workflow *ngIf="wfInstance && !addEmployee"
+        [wfInstanceId]="wfInstance"
+        [wfTemplateId]="wfTemplate"
+        (setStructureID)="setCurrentStructure($event)"></app-workflow>
+    </ng-container>
 
     <app-elms-place-employee *ngIf="addEmployee"
       [structureID]="structureID"

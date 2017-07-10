@@ -64,9 +64,9 @@
         <td *ngIf="(selectedDay && !t.selected)">{{ t.contractOrderEmployeeDetails.contractOrderCostCentreID }}</td> -->
 
         <td *ngFor="let rt of columnHeaders">
-          <ng-container *ngIf="!t.selected">{{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}</ng-container>
+          <ng-container *ngIf="!t.selected || !t.canEdit">{{ t.Total.Breakdown | rateType: rt.RateTypeID | decimalToTime }}</ng-container>
           <md-input-container
-            *ngIf="t.selected"
+            *ngIf="t.selected && t.canEdit"
             floatPlaceholder="never"
             (change)="changeTotal(rt)" >
             <input mdInput placeholder="hh:mm" [(ngModel)]="time[rt.RateTypeID]">

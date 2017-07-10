@@ -78,6 +78,23 @@ export class WfDailyComponent implements OnInit {
       this.selectedDay.selected = false;
     }
 
+    if (t.Breakdown !== undefined && t.Breakdown !== null) {
+      t.canEdit = true;
+
+      if (t.Breakdown.approveBatchID && t.Breakdown.approveBatchID !== 0) {
+        t.canEdit = false;
+      }
+
+      if (t.Breakdown.authoriseBatchID && t.Breakdown.authoriseBatchID !== 0) {
+        t.canEdit = false;
+      }
+
+      if (t.Breakdown.exportBatchID && t.Breakdown.exportBatchID !== 0) {
+        t.canEdit = false;
+      }
+
+    }
+
     if (t.selected === undefined || t.selected === null) {
       t.selected = true;
     } else {

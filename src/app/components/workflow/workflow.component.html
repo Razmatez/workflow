@@ -38,8 +38,16 @@
       </div>
 
       <p>Page {{ page() }} of {{ pages() }} ({{ total }} total) </p>
-      <button (click)='previous()'>previous</button>
-      <button (click)='next()'>next</button>
+      <button md-raised-button (click)='previous()'>previous</button>
+
+      <button md-raised-button (click)='next()'>next</button>
+
+      <md-select placeholder="items per page" [(ngModel)]="limit" (change)="changePageSize()">
+        <md-option *ngFor="let p of pageSelecter" [value]="p">
+          {{ p }}
+        </md-option>
+      </md-select>
+
     </ng-container>
 
     <ng-container *ngIf="wfTemplateId == 3"> <!-- Weekly timesheet -->

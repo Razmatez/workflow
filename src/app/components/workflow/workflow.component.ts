@@ -34,6 +34,8 @@ export class WorkflowComponent implements OnInit {
   limit: number;
   total: number;
 
+  pageSelecter: number[];
+
   constructor(private elmsApi: ElmsApiService,
     private route: ActivatedRoute,
     private router: Router) {
@@ -44,6 +46,15 @@ export class WorkflowComponent implements OnInit {
     this.skip = 0;
     this.limit = 10;
     this.wfDays = [];
+
+    this.pageSelecter = [
+      10,
+      20,
+      50,
+      100,
+      200,
+      500
+    ]
 
     console.log(this.wfInstanceId);
     console.log(this.wfTemplateId);
@@ -137,6 +148,10 @@ export class WorkflowComponent implements OnInit {
 
   pages() {
     return Math.ceil(this.total / this.limit);
+  }
+
+  changePageSize() {
+    this.getEmployees();
   }
 
   next() {

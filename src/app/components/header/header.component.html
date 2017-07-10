@@ -1,8 +1,8 @@
 <md-toolbar color="primary">
   <ng-container>Workflows</ng-container>
-  <button *ngIf="buttons.save" md-button (click)="emitHeaderEvent('save')">Save Changes</button>
   <button *ngIf="buttons.approve" md-button (click)="emitHeaderEvent('approve')">Approve</button>
   <button *ngIf="buttons.authorize" md-button (click)="emitHeaderEvent('authorize')">Authorize</button>
+  <button *ngIf="buttons.save" md-button (click)="emitHeaderEvent('save')">Save Changes</button>
   <button *ngIf="buttons.add" md-button (click)="emitHeaderEvent('add')">Add employee</button>
   <button *ngIf="buttons.close" md-button (click)="emitHeaderEvent('close')">Close</button>
 </md-toolbar>

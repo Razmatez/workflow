@@ -30,6 +30,14 @@ export class ElmsApiService {
     this.limit = 20;
   }
 
+  private getHeaders() {
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.localStorageService.get('token-elms')}`
+    });
+    return headers;
+  }
+
   login(
     username: string, password: string
   ): Observable<any> {
@@ -45,11 +53,11 @@ export class ElmsApiService {
 
     const options = new RequestOptions({ headers: headers });
 
-    let endpoint = `${config.serverWithApiOauthUrl}generate`;
-    endpoint += `?client_id=${config.clientid}`;
-    endpoint += `&env=${config.environment}`;
+    let url = `${config.serverWithApiOauthUrl}generate`;
+    url += `?client_id=${config.clientid}`;
+    url += `&env=${config.environment}`;
 
-    return this.http.get(endpoint, options)
+    return this.http.get(url, options)
         .map(this.extractDataGeneric)
         .catch(this.handleError);
   }
@@ -60,10 +68,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.localStorageService.get('token-elms')}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
@@ -79,10 +84,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
@@ -98,10 +100,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
@@ -118,10 +117,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
     const queryParams = [
@@ -145,10 +141,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
@@ -164,10 +157,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
@@ -183,10 +173,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
@@ -202,10 +189,7 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
@@ -222,14 +206,35 @@ export class ElmsApiService {
   ): Observable<any> {
     const config = new Configuration();
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.token}`
-    });
+    const headers = this.getHeaders();
 
     const options = new RequestOptions({ headers: headers });
 
-    return this.http.get(`${config.serverWithApiUrl}contractorders/${contractOrderID}/positions/${positionID}/rategroups?skip=${skip}&limit=${limit}`, options)
+    let url = config.serverWithApiUrl;
+    url += `contractorders/${contractOrderID}/positions/${positionID}/rategroups`;
+    url += `?skip=${skip}&limit=${limit}`;
+
+    return this.http.get(url, options)
+                    .map(this.extractDataGeneric)
+                    .catch(this.handleError);
+  }
+
+  postApproveWFTimesheet(
+    wfInstanceID,
+    wfTypeID,
+    wfTrackID
+  ): Observable<any> {
+    const config = new Configuration();
+
+    const headers = this.getHeaders();
+
+    const options = new RequestOptions({ headers: headers });
+
+    let url = config.serverWithApiUrl;
+    url += `workflow/instances/${wfInstanceID}/employees/approve`;
+    url += `?wfTypeID=${wfTypeID}&wfTrackID=${wfTrackID}`;
+
+    return this.http.post(url, options)
                     .map(this.extractDataGeneric)
                     .catch(this.handleError);
   }

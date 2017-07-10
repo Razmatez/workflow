@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 
+import { ElmsApiService } from './services/elms-api.service';
+
 import * as base64 from 'base64-min';
 
 @Component({
@@ -15,6 +17,8 @@ import * as base64 from 'base64-min';
 export class AppComponent implements OnInit {
   loading: boolean;
   error: string;
+
+  approving: boolean;
 
   loggedIn: boolean;
 
@@ -32,6 +36,7 @@ export class AppComponent implements OnInit {
   showTimesheetPopup: boolean;
 
   constructor(
+    private elmsApi: ElmsApiService,
     private route: ActivatedRoute,
     private router: Router,
     private localStorageService: LocalStorageService,
@@ -42,6 +47,8 @@ export class AppComponent implements OnInit {
 
     this.loading = true;
     this.error = '';
+
+    this.approving = false;
 
     this.loggedIn = false;
 
@@ -197,6 +204,19 @@ export class AppComponent implements OnInit {
       case 'close':
         this.closeComponent('all');
         this.updateHeader();
+        break;
+      case 'approve':
+        this.approving = true;
+        this.elmsApi.postApproveWFTimesheet(this.wfInstance, this.wfTemplate, this.wfTrack)
+          .subscribe(
+            result => {
+              this.approving = false;
+            },
+            error => {
+              this.error = <any>error
+              this.approving = false
+              const snackRef = this.snackBar.open(JSON.stringify(this.error), null, { duration: 3000 })
+            });
         break;
       default:
         const snackRef = this.snackBar.open(`${button} is not implemented`, null, { duration: 2000 })
