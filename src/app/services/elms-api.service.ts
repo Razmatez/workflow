@@ -9,7 +9,6 @@ import 'rxjs/add/operator/map';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 import * as _ from 'lodash';
-import * as base64 from 'base64-min';
 
 import { Configuration } from './app.config';
 import { Employee } from '../models/employee';
@@ -42,7 +41,7 @@ export class ElmsApiService {
     username: string, password: string
   ): Observable<any> {
 
-    const authBasic = base64.encode(`${username}:${password}`);
+    const authBasic = btoa(`${username}:${password}`);
 
     const config = new Configuration();
 

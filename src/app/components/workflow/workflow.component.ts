@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ElmsApiService } from '../../services/elms-api.service';
 import { Employee } from '../../models/employee';
 
+import * as _ from 'lodash';
 import * as moment from 'moment';
 
 @Component({
@@ -19,12 +20,11 @@ export class WorkflowComponent implements OnInit {
   @Input() wfTrackId: number;
 
   errorMessage: string;
-
   wfInstance: any;
 
 
-  wfEmployees: Employee[];
   wfEmployeesLoading: boolean;
+  wfEmployees: Employee[];
   wfDays: any[];
 
   rateTypes: any;
@@ -126,11 +126,97 @@ export class WorkflowComponent implements OnInit {
               this.wfEmployees[i].coeDetails = {};
             }
 
+            this.wfEmployees[i].timesheets = null;
+            this.wfEmployees[i].timesheetsLoading = false;
+
             if (i === count - 1) {
               this.wfEmployeesLoading = false;
             }
+
+            this.getEmployeeTime(this.wfEmployees[i]);
           },
           error =>  this.errorMessage = <any>error);
+    }
+  }
+
+  getEmployeeTime(e: Employee) {
+    if (!e.timesheetsLoading && e.timesheets === null) {
+      this.getTimesheets(e);
+    }
+
+    /*let to = 0;
+
+    if (this.total > this.skip + this.limit) {
+      to = this.skip + this.limit;
+    } else {
+      to = this.total;
+    }
+
+    console.log(`Get time from ${this.skip} to ${to}`)
+
+    // for (let i = this.skip; i < to; i++) {
+    for (let i = 0; i < this.wfEmployees.length; i++) {
+      if (!this.wfEmployees[i].timesheetsLoading && this.wfEmployees[i].timesheets === null) {
+        this.getTimesheets(this.wfEmployees[i]);
+      }
+
+    }*/
+  }
+
+  getTimesheets(e: Employee) {
+    e.timesheetsLoading = true;
+
+    if (!e) {
+      return;
+    }
+
+    this.elmsApi.getTimesheets(
+      this.skip,
+      this.limit,
+      e.contractorderEmployeeID,
+      this.wfInstance.calendarID)
+      .subscribe(
+        result => {
+          e.timesheetsTotal = result.total;
+          e.timesheets = result.result;
+          this.addMissingDates(e);
+        },
+        error => {
+          this.errorMessage = <any>error;
+          e.timesheetsLoading = false;
+        })
+  }
+
+  addMissingDates(e: Employee) {
+    // console.log(this.employee.coeDetails);
+    const count = this.wfDays.length;
+
+    for (let i = 0; i < count; i++) {
+      if (_.findIndex(e.timesheets, { timesheet: { Date: this.wfDays[i].format('YYYY-MM-DDTHH:mm:ss') } }) < 0) {
+
+        e.timesheets.push(
+          {
+            'timesheet': {
+              'Date': this.wfDays[i].format('YYYY-MM-DDTHH:mm:ss')
+            },
+            'Total': {
+                'TimeValue': 0,
+                'PayValue': 0,
+                'BillValue': 0,
+                'Breakdown': []
+            },
+            'contractOrderEmployeeDetails': _.cloneDeep(e.coeDetails),
+            'Breakdown': {
+              'strS': '00:00',
+              'strB': '00:00',
+              'strF': '00:00',
+            }
+          })
+      }
+      if ( i === count - 1 ) {
+        e.timesheetsLoading = false;
+        console.log(e);
+      }
     }
   }
 

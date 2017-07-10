@@ -10,6 +10,11 @@ import { rateType } from '../models/rateType'
 export class RateGroupTotalPipe implements PipeTransform {
 
   transform(value: any[], rateType: number): number {
+    if (value === undefined || value === null) {
+      console.log(`value can't be ${value}`);
+      return null;
+    }
+
     let total = 0;
 
     for (let i = 0; i < value.length; i++) {

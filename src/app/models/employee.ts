@@ -6,4 +6,8 @@ export class Employee {
   employeeCodeClient: string;
   contractorderEmployeeID: number;
   coeDetails: object;
+
+  timesheets: any;
+  timesheetsTotal: number;
+  timesheetsLoading: boolean;
 }

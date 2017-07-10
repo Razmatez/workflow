@@ -17,17 +17,14 @@ import { ElmsApiService } from '../../services/elms-api.service';
 export class WorkflowEmployeeComponent implements OnInit {
   // loader
   componentLoading: boolean;
-  /*color = 'primary';
-  mode = 'indeterminate';
-  value = 0;*/
 
   color = 'primary';
   mode = 'query';
 
   @Input() employee: Employee;
-  @Input() calendar: number;
   @Input() rateTypes: any;
   @Input() wfDays: any[];
+  @Input() wfTemplateId: number;
 
   errorMessage: string;
   skip: number;
@@ -52,75 +49,22 @@ export class WorkflowEmployeeComponent implements OnInit {
       { 'Description': 'Normal Time', 'RateTypeID': 2 },
       { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
       { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
-      { 'Description': 'Breaks', 'RateTypeID': 15 },
+      { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
       { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
+      { 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
+      { 'Description': 'Public Holiday Paid', 'RateTypeID': 11 }
     ];
 
     this.skip = 0;
     this.limit = 20;
     this.total = 0;
 
-    this.getTimesheets();
+    this.timesheetsLoading = this.employee.timesheetsLoading;
+    this.timesheets = this.employee.timesheets;
 
     this.canEdit = false;
 
     this.componentLoading = false;
-  }
-
-  getTimesheets() {
-    this.timesheetsLoading = true;
-
-    if (!this.employee) {
-      return;
-    }
-
-    this.elmsApi.getTimesheets(
-      this.skip,
-      this.limit,
-      this.employee.contractorderEmployeeID,
-      this.calendar)
-      .subscribe(
-        result => {
-          this.total = result.total;
-          this.timesheets = result.result;
-          this.addMissingDates();
-        },
-        error => {
-          this.errorMessage = <any>error;
-          this.timesheetsLoading = false;
-        })
-  }
-
-  addMissingDates() {
-    // console.log(this.employee.coeDetails);
-    const count = this.wfDays.length;
-
-    for (let i = 0; i < count; i++) {
-      if (_.findIndex(this.timesheets, { timesheet: { Date: this.wfDays[i].format('YYYY-MM-DDTHH:mm:ss') } }) < 0) {
-
-        this.timesheets.push(
-          {
-            'timesheet': {
-              'Date': this.wfDays[i].format('YYYY-MM-DDTHH:mm:ss')
-            },
-            'Total': {
-                'TimeValue': 0,
-                'PayValue': 0,
-                'BillValue': 0,
-                'Breakdown': []
-            },
-            'contractOrderEmployeeDetails': _.cloneDeep(this.employee.coeDetails),
-            'Breakdown': {
-              'strS': '00:00',
-              'strB': '00:00',
-              'strF': '00:00',
-            }
-          })
-      }
-      if ( i === count - 1 ) {
-        this.timesheetsLoading = false;
-      }
-    }
   }
 
   openDialog() {

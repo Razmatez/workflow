@@ -1,0 +1,50 @@
+<div *ngIf="timesheetsLoading; then loader else times"></div>
+
+<p *ngIf="errorMessage">{{errorMessage}}</p>
+
+<ng-template #loader>
+  <div>
+  </div>
+</ng-template>
+
+<ng-template #times>
+  <div>
+
+    <table [ngClass]="tableClass">
+      <tr>
+        <ng-container *ngFor="let d of wfDays ">
+          <th>{{ d | date:"EEEE" }}</th>
+        </ng-container>
+        <th>Week</th>
+        <th *ngFor="let rt of columnHeaders">{{ rt.Description }}</th>
+        <th>Cost Centre</th>
+        <th>Position</th>
+        <th>Rategroup</th>
+        <th>Workgroup</th>
+        <th>Bill value</th>
+        <th>Pay value</th>
+      </tr>
+
+      <tr>
+        <ng-container *ngFor="let d of wfDays ">
+          <td>
+          {{ timesheets | dailyTotal: d }}
+          </td>
+        </ng-container>
+        <td>{{ timesheets | dailyTotal: 'all' }}</td>
+        <ng-container>
+          <td *ngFor="let rt of columnHeaders">
+          {{ timesheets | rateGroupTotal: rt.RateTypeID | decimalToTime }}
+        </td>
+        </ng-container>
+        <td>{{employee.coeDetails.costCentreName}}</td>
+        <td>{{employee.coeDetails.position}}</td>
+        <td>{{employee.coeDetails.contractOrderPositionRateGroup}}</td>
+        <td>{{employee.coeDetails.workgroup}}</td>
+
+        <td>{{ timesheets | billValueTotal | currency:'ZAR':true }}</td>
+        <td>{{ timesheets | payValueTotal | currency:'ZAR':true }}</td>
+      </tr>
+    </table>
+  </div>
+</ng-template>

@@ -6,8 +6,6 @@ import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 
 import { ElmsApiService } from './services/elms-api.service';
 
-import * as base64 from 'base64-min';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -154,27 +152,27 @@ export class AppComponent implements OnInit {
       .subscribe(params => {
         // Defaults to 0 if no query param provided.
         if (params['spPage']) {
-          this.wfInstance = base64.decode(params['spPage']);
+          this.wfInstance = parseInt(atob(params['spPage']), 10);
           // console.log('wfInstance:' + this.wfInstance);
         }
 
         if (params['spDept']) {
-          this.wfTemplate = base64.decode(params['spDept']);
+          this.wfTemplate = parseInt(atob(params['spDept']), 10);
           // console.log('wfTemplate:' + this.wfTemplate);
         }
 
         if (params['spTrk']) {
-          this.wfTrack = base64.decode(params['spTrk']);
-          console.log('wfTrack:' + this.wfTrack);
+          this.wfTrack = parseInt(atob(params['spTrk']), 10);
+          // console.log('wfTrack:' + this.wfTrack);
         }
 
         if (params['spAC']) {
-          this.wfEmail = base64.decode(params['spAC']);
+          this.wfEmail = parseInt(atob(params['spAC']), 10);
           // console.log('wfEmail:' + this.wfEmail);
         }
 
         if (params['spUser']) {
-          this.wfUser = base64.decode(params['spUser']);
+          this.wfUser = atob(params['spUser']);
           this.lockUser = true;
           // console.log('wfUser:' + this.wfUser);
         } else {

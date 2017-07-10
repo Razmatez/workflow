@@ -27,11 +27,11 @@
         <p>Employee Confirmations are not yet implemented.</p>
     </ng-container>
 
-    <ng-container *ngIf="wfTemplateId == 2"> <!-- Daily timesheet -->
+    <ng-container *ngIf="wfTemplateId == 2 || wfTemplateId == 3"> <!-- Daily timesheet -->
       <div *ngFor="let e of wfEmployees">
-        <app-workflow-employee
+        <app-workflow-employee *ngIf="!e.timesheetsLoading"
+          [wfTemplateId]=wfTemplateId
           [employee]=e
-          [calendar]=wfInstance.calendarID
           [rateTypes]=rateTypes.result
           [wfDays]=wfDays>
         </app-workflow-employee>
@@ -39,7 +39,6 @@
 
       <p>Page {{ page() }} of {{ pages() }} ({{ total }} total) </p>
       <button md-raised-button (click)='previous()'>previous</button>
-
       <button md-raised-button (click)='next()'>next</button>
 
       <md-select placeholder="items per page" [(ngModel)]="limit" (change)="changePageSize()">
@@ -50,9 +49,9 @@
 
     </ng-container>
 
-    <ng-container *ngIf="wfTemplateId == 3"> <!-- Weekly timesheet -->
+    <!-- <ng-container *ngIf="wfTemplateId == 3">
       <p>Weekly timesheets are not yet implemented</p>
-    </ng-container>
+    </ng-container> -->
 
   </ng-template>
 
