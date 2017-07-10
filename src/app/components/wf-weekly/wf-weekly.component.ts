@@ -50,7 +50,7 @@ export class WfWeeklyComponent implements OnInit {
   timesheets: any;
   timesheetsLoading: boolean;
 
-  constructor() { }
+  constructor(public dialog: MdDialog) { }
 
   ngOnInit() {
     this.costCentres = {};
@@ -63,4 +63,18 @@ export class WfWeeklyComponent implements OnInit {
     this.timesheets = this.employee.timesheets;
   }
 
+  openDialog() {
+    const config = new MdDialogConfig();
+    const dialogRef = this.dialog.open(ElmsTimesheetpopupComponent, config);
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+
+    const coeid = this.employee.coeDetails.contractOrderEmployeeID;
+    const period = this.wfDays[0].format('DD MMM YYYY') + ' to ' + this.wfDays[0].add(7, 'day').format('DD MMM YYYY')
+
+    dialogRef.componentInstance.contractOrderEmployeeID = coeid
+    dialogRef.componentInstance.period = period;
+    // dialogRef.componentInstance.period = '12 Jun 2017 to 18 Jun 2017';
+  }
 }

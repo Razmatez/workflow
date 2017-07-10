@@ -5,7 +5,7 @@ export class Employee {
   employeeCode: string;
   employeeCodeClient: string;
   contractorderEmployeeID: number;
-  coeDetails: object;
+  coeDetails: any;
 
   timesheets: any;
   timesheetsTotal: number;

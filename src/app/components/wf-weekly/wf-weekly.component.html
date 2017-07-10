@@ -12,6 +12,7 @@
 
     <table [ngClass]="tableClass">
       <tr>
+        <th></th>
         <ng-container *ngFor="let d of wfDays ">
           <th>{{ d | date:"EEEE" }}</th>
         </ng-container>
@@ -26,15 +27,18 @@
       </tr>
 
       <tr>
+        <td>
+          <a md-button (click)="openDialog()">edit</a>
+        </td>
         <ng-container *ngFor="let d of wfDays ">
           <td>
-          {{ timesheets | dailyTotal: d }}
+          {{ timesheets | dailyTotal: d | number : '1.2-2' }}
           </td>
         </ng-container>
-        <td>{{ timesheets | dailyTotal: 'all' }}</td>
+        <td>{{ timesheets | dailyTotal: 'all' | number : '1.2-2' }}</td>
         <ng-container>
           <td *ngFor="let rt of columnHeaders">
-          {{ timesheets | rateGroupTotal: rt.RateTypeID | decimalToTime }}
+          {{ timesheets | rateGroupTotal: rt.RateTypeID | number : '1.2-2' }}
         </td>
         </ng-container>
         <td>{{employee.coeDetails.costCentreName}}</td>
