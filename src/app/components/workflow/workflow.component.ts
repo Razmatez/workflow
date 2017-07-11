@@ -35,6 +35,8 @@ export class WorkflowComponent implements OnInit {
   total: number;
 
   pageSelecter: number[];
+  columnHeaders: any;
+  columnHeadersWeekly: any;
 
   constructor(private elmsApi: ElmsApiService,
     private route: ActivatedRoute,
@@ -55,6 +57,31 @@ export class WorkflowComponent implements OnInit {
       200,
       500
     ]
+
+    this.columnHeaders = [
+      { 'Description': 'Normal Time', 'RateTypeID': 2 },
+      { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
+      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
+      { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
+      { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
+      { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
+      { 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
+      { 'Description': 'Public Holiday Paid', 'RateTypeID': 11 }
+    ];
+
+    this.columnHeadersWeekly = [
+      { 'Description': 'Normal Time', 'RateTypeID': 2 },
+      { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
+      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
+      { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
+      { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
+      { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
+      { 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
+      { 'Description': 'Public Holiday Paid', 'RateTypeID': 11 },
+      { 'Description': 'Annual Leave', 'RateTypeID': 33 },
+      { 'Description': 'Sick Leave', 'RateTypeID': 34 },
+      { 'Description': 'Family Responsibility', 'RateTypeID': 36 }
+    ];
 
     if (this.wfInstanceId !== -1 ) {
       this.getWFInstance();
@@ -225,6 +252,14 @@ export class WorkflowComponent implements OnInit {
     };
   }
 
+  getColumnHeaders() {
+    if (this.wfTemplateId === 2) {
+      return this.columnHeaders;
+    } else {
+      return this.columnHeadersWeekly;
+    }
+  }
+
   page() {
     return this.skip / this.limit + 1;
   }
@@ -249,5 +284,17 @@ export class WorkflowComponent implements OnInit {
       this.skip -= this.limit;
       this.getEmployees();
     }
+  }
+
+  wfEmployeeTimeLoading() {
+    let t = false;
+    for (let i = 0; i < this.wfEmployees.length; i++) {
+      if (this.wfEmployees[i].timesheetsLoading) {
+        t = true;
+        break;
+      }
+    }
+
+    return t;
   }
 }

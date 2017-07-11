@@ -28,25 +28,37 @@
     </ng-container>
 
     <ng-container *ngIf="wfTemplateId == 2 || wfTemplateId == 3"> <!-- Daily timesheet -->
-      <div *ngFor="let e of wfEmployees">
+      <ng-container *ngFor="let e of wfEmployees">
         <app-workflow-employee *ngIf="!e.timesheetsLoading"
           [wfTemplateId]=wfTemplateId
           [employee]=e
           [rateTypes]=rateTypes.result
-          [wfDays]=wfDays>
+          [wfDays]=wfDays
+          [columnHeaders]=getColumnHeaders()>
         </app-workflow-employee>
-      </div>
+      </ng-container>
+
+      <app-wf-grandtotal *ngIf="!wfEmployeeTimeLoading()"
+          [wfTemplateId]=wfTemplateId
+          [employees]=wfEmployees
+          [columnHeaders]=getColumnHeaders()></app-wf-grandtotal>
 
       <ng-container *ngIf="pageSelecter">
-        <p>Page {{ page() }} of {{ pages() }} ({{ total }} total) </p>
-        <button md-raised-button (click)='previous()'>previous</button>
-        <button md-raised-button (click)='next()'>next</button>
 
-        <md-select placeholder="items per page" [(ngModel)]="limit" (change)="changePageSize()">
-          <md-option *ngFor="let p of pageSelecter" [value]="p">
-            {{ p }}
-          </md-option>
-        </md-select>
+      <md-card class="header-card">
+        <md-card-content>
+          <p>Page {{ page() }} of {{ pages() }} ({{ total }} total) </p>
+          <button md-raised-button (click)='previous()'>previous</button>
+          <button md-raised-button (click)='next()'>next</button>
+
+          <md-select placeholder="items per page" [(ngModel)]="limit" (change)="changePageSize()">
+            <md-option *ngFor="let p of pageSelecter" [value]="p">
+              {{ p }}
+            </md-option>
+          </md-select>
+        </md-card-content>
+      </md-card>
+
       </ng-container>
 
     </ng-container>

@@ -25,6 +25,7 @@ export class WorkflowEmployeeComponent implements OnInit {
   @Input() rateTypes: any;
   @Input() wfDays: any[];
   @Input() wfTemplateId: number;
+  @Input() columnHeaders: any;
 
   errorMessage: string;
   skip: number;
@@ -36,8 +37,7 @@ export class WorkflowEmployeeComponent implements OnInit {
   timesheets: any;
   timesheetsLoading: boolean;
 
-  columnHeaders: any;
-  columnHeadersWeekly: any;
+
 
   constructor(
     private elmsApi: ElmsApiService,
@@ -45,31 +45,9 @@ export class WorkflowEmployeeComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.employee);
 
-    this.columnHeaders = [
-      { 'Description': 'Normal Time', 'RateTypeID': 2 },
-      { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
-      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
-      { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
-      { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
-      { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
-      { 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
-      { 'Description': 'Public Holiday Paid', 'RateTypeID': 11 }
-    ];
 
-    this.columnHeadersWeekly = [
-      { 'Description': 'Normal Time', 'RateTypeID': 2 },
-      { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
-      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
-      { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
-      { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
-      { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
-      { 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
-      { 'Description': 'Public Holiday Paid', 'RateTypeID': 11 },
-      { 'Description': 'Annual Leave', 'RateTypeID': 33 },
-      { 'Description': 'Sick Leave', 'RateTypeID': 34 },
-      { 'Description': 'Family Responsibility', 'RateTypeID': 36 }
-    ];
 
     this.skip = 0;
     this.limit = 20;

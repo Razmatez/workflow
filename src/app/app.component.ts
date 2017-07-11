@@ -6,6 +6,10 @@ import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 
 import { ElmsApiService } from './services/elms-api.service';
 
+import * as jspdf from 'jspdf';
+import * as $ from 'jquery';
+// import * as h2p from 'html2pdf';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -243,5 +247,33 @@ export class AppComponent implements OnInit {
     this.structureID = sID;
   }
 
+  generatePDF() {
+    console.log('here');
+    const doc = new jspdf()
+
+    // doc.text('Hello world!', 10, 10)
+
+    const specialElementHandlers = {
+      '#editor': function(element, renderer){
+        return true;
+      }
+    };
+
+    doc.fromHTML($('body').get(0), 15, 15, {
+      'width': 170,
+      'elementHandlers': specialElementHandlers
+    });
+    doc.save('a4.pdf')
+
+    /*const pdf = new jspdf('p', 'pt', 'letter');
+    pdf.canvas.height = 72 * 11;
+    pdf.canvas.width = 72 * 8.5;
+    h2p(document.body, pdf, (pdfRes) => {
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('style', 'position:absolute;right:0; top:0; bottom:0; height:100%; width:500px');
+        document.body.appendChild(iframe);
+        iframe.src = pdfRes.output('datauristring');
+    });*/
+  }
 
 }

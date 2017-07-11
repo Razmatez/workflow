@@ -1,0 +1,48 @@
+<md-card class="header-card">
+  <md-card-content>
+
+    <div *ngIf="timesheetsLoading; then loader else times"></div>
+
+    <p *ngIf="errorMessage">{{errorMessage}}</p>
+
+    <ng-template #loader>
+      <div>
+      </div>
+    </ng-template>
+
+    <ng-template #times>
+      <div>
+
+        <table [ngClass]="tableClass">
+          <tr>
+            <!-- <ng-container *ngFor="let d of wfDays ">
+              <th>{{ d | date:"EEEE" }}</th>
+            </ng-container>
+            <th>Weekly Totals</th> -->
+            <th *ngFor="let ch of columnHeaders">{{ ch.Description }}</th>
+            <th>Pay value</th>
+            <th>Bill value</th>
+          </tr>
+
+          <tr>
+            <!-- <ng-container *ngFor="let d of wfDays ">
+              <td>
+              {{ employees[0].timesheets | dailyTotal: d | number : '1.2-2' }}
+              </td>
+            </ng-container>
+            <td>{{ employees[0].timesheets | dailyTotal: 'all' | number : '1.2-2' }}</td> -->
+            <ng-container>
+              <td *ngFor="let ch of columnHeaders">
+              {{ employees | rateGroupGrandTotal: ch.RateTypeID | number : '1.2-2' }}
+            </td>
+            </ng-container>
+
+            <td>{{ employees | billValueGrandTotal | currency:'ZAR':true }}</td>
+            <td>{{ employees | payValueGrandTotal | currency:'ZAR':true }}</td>
+          </tr>
+        </table>
+      </div>
+    </ng-template>
+
+  </md-card-content>
+</md-card>

@@ -46,6 +46,10 @@ import { PayValueTotalPipe } from './pipes/pay-value-total.pipe';
 import { LoginComponent } from './components/login/login.component';
 import { WfWeeklyComponent } from './components/wf-weekly/wf-weekly.component';
 import { DailyTotalPipe } from './pipes/daily-total.pipe';
+import { WfGrandtotalComponent } from './components/wf-grandtotal/wf-grandtotal.component';
+import { BillValueGrandTotalPipe } from './pipes/bill-value-grand-total.pipe';
+import { PayValueGrandTotalPipe } from './pipes/pay-value-grand-total.pipe';
+import { RateGroupGrandTotalPipe } from './pipes/rate-group-grand-total.pipe';
 
 const appRoutes = [
   { path: 'workflows', component: WorkflowComponent }
@@ -73,7 +77,11 @@ const appRoutes = [
     PayValueTotalPipe,
     LoginComponent,
     WfWeeklyComponent,
-    DailyTotalPipe
+    DailyTotalPipe,
+    WfGrandtotalComponent,
+    BillValueGrandTotalPipe,
+    PayValueGrandTotalPipe,
+    RateGroupGrandTotalPipe
   ],
   imports: [
     BrowserModule,
