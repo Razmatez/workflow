@@ -33,7 +33,19 @@ export class LoginComponent implements OnInit {
     this.password = '';
   }
 
-  login() {
+  login(event: KeyboardEvent) {
+    // Check for enter button
+    if (event) {
+      if (!event.isTrusted) {
+        console.log('Invalid input');
+        return;
+      }
+
+      if (event.key !== 'Enter') {
+        return;
+      }
+    }
+
     this.error = null;
 
     this.elmsApi.login(this.wfUser, this.password)

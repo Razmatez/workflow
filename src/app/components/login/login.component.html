@@ -1,12 +1,17 @@
 <md-card class="example-card" class="center">
   <md-input-container
     class="example-full-width">
-    <input mdInput placeholder="username" [disabled]="lockUser" [(ngModel)]="wfUser">
+    <input mdInput placeholder="username"
+      [disabled]="lockUser"
+      [(ngModel)]="wfUser"
+      (keyup)="login($event)">
   </md-input-container>
 
   <md-input-container
     class="example-full-width">
-    <input type="password" mdInput placeholder="password" [(ngModel)]="password">
+    <input type="password" mdInput placeholder="password"
+      [(ngModel)]="password"
+      (keyup)="login($event)">
   </md-input-container>
   <p *ngIf="error" style="color: red;">{{error}}</p>
   <button md-raised-button (click)="login()">Login</button>
