@@ -14,7 +14,7 @@
       (keyup)="login($event)">
   </md-input-container>
   <p *ngIf="error" style="color: red;">{{error}}</p>
-  <button md-raised-button (click)="login()">Login</button>
+  <button md-raised-button (click)="login(null)">Login</button>
 </md-card>
 
 <p>{{token}}</p>
