@@ -13,11 +13,16 @@
     </ng-container>
 
     <ng-container *ngIf="!approving">
-      <app-workflow *ngIf="wfInstance && !addEmployee"
+      <app-workflow *ngIf="wfInstance && !addEmployee && !timesheetPopup?.showTimesheetPopup"
         [wfInstanceId]="wfInstance"
         [wfTemplateId]="wfTemplate"
         (setStructureID)="setCurrentStructure($event)"></app-workflow>
     </ng-container>
+
+    <app-elms-timesheetpopup *ngIf="timesheetPopup?.showTimesheetPopup"
+      [contractOrderEmployeeID]="timesheetPopup?.contractOrderEmployeeID"
+      [period]="timesheetPopup?.period"
+      (closeComponent)="closeComponent($event)"></app-elms-timesheetpopup>
 
     <app-elms-place-employee *ngIf="addEmployee"
       [structureID]="structureID"

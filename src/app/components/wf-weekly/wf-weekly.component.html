@@ -14,10 +14,12 @@
       <tr>
         <th></th>
         <ng-container *ngFor="let d of wfDays ">
-          <th>{{ d | date:"EEEE" }}</th>
+          <th>{{ d | date:"EEE" }}</th>
         </ng-container>
-        <th>Weekly Totals</th>
-        <th *ngFor="let rt of columnHeaders">{{ rt.Description }}</th>
+        <th>Period</th>
+        <th *ngFor="let rt of columnHeaders"
+          [mdTooltip]="rt?.Description"
+          [mdTooltipPosition]="'above'">{{ rt.Code }}</th>
         <th>Cost Centre</th>
         <th>Position</th>
         <th>Rategroup</th>

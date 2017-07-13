@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ElmsApiService } from '../../services/elms-api.service';
@@ -6,6 +6,7 @@ import { Employee } from '../../models/employee';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import * as Q from 'Q';
 
 @Component({
   selector: 'app-workflow',
@@ -14,6 +15,7 @@ import * as moment from 'moment';
 })
 
 export class WorkflowComponent implements OnInit {
+  loading: boolean;
   @Output() setStructureID = new EventEmitter<number>();
   @Input() wfInstanceId: number;
   @Input() wfTemplateId: number;
@@ -22,6 +24,7 @@ export class WorkflowComponent implements OnInit {
   errorMessage: string;
   wfInstance: any;
 
+  wfTimesheetsLoading: boolean;
 
   wfEmployeesLoading: boolean;
   wfEmployees: Employee[];
@@ -34,22 +37,24 @@ export class WorkflowComponent implements OnInit {
   limit: number;
   total: number;
 
-  pageSelecter: number[];
+  pageSelector: number[];
   columnHeaders: any;
   columnHeadersWeekly: any;
 
   constructor(private elmsApi: ElmsApiService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private _ngZone: NgZone) {
     this.total = 0;
   }
 
   ngOnInit() {
+    this.loading = true;
     this.skip = 0;
     this.limit = 10;
     this.wfDays = [];
 
-    this.pageSelecter = [
+    this.pageSelector = [
       10,
       20,
       50,
@@ -59,41 +64,42 @@ export class WorkflowComponent implements OnInit {
     ]
 
     this.columnHeaders = [
-      { 'Description': 'Normal Time', 'RateTypeID': 2 },
-      { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
-      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
-      { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
-      { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
-      { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
-      { 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
-      { 'Description': 'Public Holiday Paid', 'RateTypeID': 11 }
+      { 'Code': 'NH', 'Description': 'Normal Time', 'RateTypeID': 2 },
+      { 'Code': 'OT15', 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
+      { 'Code': 'OT20', 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
+      { 'Code': 'SA', 'Description': 'Shift Allowance', 'RateTypeID': 23 },
+      { 'Code': 'PHW', 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
+      { 'Code': 'PHP', 'Description': 'Public Holiday Paid', 'RateTypeID': 11 }
     ];
 
     this.columnHeadersWeekly = [
-      { 'Description': 'Normal Time', 'RateTypeID': 2 },
-      { 'Description': 'Overtime 1.00', 'RateTypeID': 7 },
-      { 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
-      { 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
-      { 'Description': 'Sunday Time', 'RateTypeID': 1009 },
-      { 'Description': 'Shift Allowance', 'RateTypeID': 23 },
-      { 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
-      { 'Description': 'Public Holiday Paid', 'RateTypeID': 11 },
-      { 'Description': 'Annual Leave', 'RateTypeID': 33 },
-      { 'Description': 'Sick Leave', 'RateTypeID': 34 },
-      { 'Description': 'Family Responsibility', 'RateTypeID': 36 }
+      { 'Code': 'NH', 'Description': 'Normal Time', 'RateTypeID': 2 },
+      { 'Code': 'OT15', 'Description': 'Overtime 1.50', 'RateTypeID': 9 },
+      { 'Code': 'OT20', 'Description': 'Overtime 2.00', 'RateTypeID': 10 },
+      { 'Code': 'SA', 'Description': 'Shift Allowance', 'RateTypeID': 23 },
+      { 'Code': 'PHW', 'Description': 'Public Holiday Worked', 'RateTypeID': 14 },
+      { 'Code': 'PHP', 'Description': 'Public Holiday Paid', 'RateTypeID': 11 },
+      { 'Code': 'AL', 'Description': 'Annual Leave', 'RateTypeID': 33 },
+      { 'Code': 'SL', 'Description': 'Sick Leave', 'RateTypeID': 34 },
+      { 'Code': 'FRL', 'Description': 'Family Responsibility', 'RateTypeID': 36 }
     ];
 
     if (this.wfInstanceId !== -1 ) {
       this.getWFInstance();
-      this.getEmployees();
+
+      this.wfEmployeesLoading = true;
+      console.log(`employees loading is: ${this.wfEmployeesLoading}`);
+        this.getEmployees();
     }
 
     this.rateTypesLoading = true;
     this.getRatetypes();
+
+    this.loading = false;
   }
 
   getEmployees() {
-    this.wfEmployeesLoading = true;
+    console.log('getEmployees Start');
 
     if (this.wfInstanceId === undefined || this.wfInstanceId === null) {
       return;
@@ -103,10 +109,15 @@ export class WorkflowComponent implements OnInit {
       .subscribe(
         result => {
           this.wfEmployees = result.employees;
-          this.reformatEmployees();
           this.total = result.total;
+          console.log('getEmployees Done');
+          this.wfEmployeesLoading = false;
+
+          this.reformatEmployees();
         },
         error =>  this.errorMessage = <any>error);
+
+
   }
 
   getWFInstance() {
@@ -139,6 +150,8 @@ export class WorkflowComponent implements OnInit {
   }
 
   reformatEmployees() {
+    console.log('reformatEmployees Start');
+
     const count = this.wfEmployees.length;
     for (let i = 0; i < count; i++) {
 
@@ -155,37 +168,33 @@ export class WorkflowComponent implements OnInit {
             this.wfEmployees[i].timesheetsLoading = false;
 
             if (i === count - 1) {
-              this.wfEmployeesLoading = false;
+              console.log('reformatEmployees Done');
+              this.wfTimesheetsLoading = true;
+              console.log('Done A2');
+              this.getAllEmployeesTime(true);
             }
-
-            this.getEmployeeTime(this.wfEmployees[i]);
           },
           error =>  this.errorMessage = <any>error);
     }
   }
 
-  getEmployeeTime(e: Employee) {
-    if (!e.timesheetsLoading && e.timesheets === null) {
+  getAllEmployeesTime(refresh: boolean) {
+    console.log('getAllEmployeesTime Start');
+
+    for (let i = 0; i < this.wfEmployees.length; i++) {
+      this.getEmployeeTime(this.wfEmployees[i], refresh);
+
+      if (i === this.wfEmployees.length - 1) {
+        console.log('getAllEmployeesTime Done');
+        this.wfTimesheetsLoading = false;
+      }
+    }
+  }
+
+  getEmployeeTime(e: Employee, refresh: boolean) {
+    if (!e.timesheetsLoading && (refresh || e.timesheets === null)) {
       this.getTimesheets(e);
     }
-
-    /*let to = 0;
-
-    if (this.total > this.skip + this.limit) {
-      to = this.skip + this.limit;
-    } else {
-      to = this.total;
-    }
-
-    console.log(`Get time from ${this.skip} to ${to}`)
-
-    // for (let i = this.skip; i < to; i++) {
-    for (let i = 0; i < this.wfEmployees.length; i++) {
-      if (!this.wfEmployees[i].timesheetsLoading && this.wfEmployees[i].timesheets === null) {
-        this.getTimesheets(this.wfEmployees[i]);
-      }
-
-    }*/
   }
 
   getTimesheets(e: Employee) {
@@ -205,15 +214,15 @@ export class WorkflowComponent implements OnInit {
           e.timesheetsTotal = result.total;
           e.timesheets = result.result;
           this.addMissingDates(e);
+          this.trollPayrollRateTypes(e);
         },
         error => {
-          this.errorMessage = <any>error;
-          e.timesheetsLoading = false;
+          console.error(error);
+          this.errorMessage = error;
         })
   }
 
   addMissingDates(e: Employee) {
-    // console.log(this.employee.coeDetails);
     const count = this.wfDays.length;
 
     for (let i = 0; i < count; i++) {
@@ -238,10 +247,15 @@ export class WorkflowComponent implements OnInit {
             }
           })
       }
+
       if ( i === count - 1 ) {
         e.timesheetsLoading = false;
       }
     }
+  }
+
+  trollPayrollRateTypes(e: Employee) {
+    console.log('trolling');
   }
 
   fillExpectedDays(from: Date, to: Date) {

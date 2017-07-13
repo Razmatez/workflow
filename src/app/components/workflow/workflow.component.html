@@ -1,3 +1,5 @@
+<p>Loading: {{loading}}</p>
+
 <app-wf-header *ngIf="wfInstance" [wfInstance]=wfInstance></app-wf-header>
 
 <p class="error" *ngIf="errorMessage">{{errorMessage}}</p>
@@ -12,13 +14,14 @@
     [value]="value">
   </md-progress-spinner>
 </ng-template>
-
 <ng-template #content>
   <ng-container *ngIf="wfEmployeesLoading; then empLoader else empContent">
   </ng-container>
 
   <ng-template #empLoader>
-    <p>Employees loading</p>
+    <p>Employees loading: {{wfEmployeesLoading}}</p>
+    <p>Timesheets loading: {{wfTimesheetsLoading}}</p>
+    <p>Rate Types loading: {{rateTypesLoading}}</p>
   </ng-template>
 
   <ng-template #empContent>
@@ -43,7 +46,7 @@
           [employees]=wfEmployees
           [columnHeaders]=getColumnHeaders()></app-wf-grandtotal>
 
-      <ng-container *ngIf="pageSelecter">
+      <ng-container *ngIf="pageSelector">
 
       <md-card class="header-card">
         <md-card-content>
@@ -52,7 +55,7 @@
           <button md-raised-button (click)='next()'>next</button>
 
           <md-select placeholder="items per page" [(ngModel)]="limit" (change)="changePageSize()">
-            <md-option *ngFor="let p of pageSelecter" [value]="p">
+            <md-option *ngFor="let p of pageSelector" [value]="p">
               {{ p }}
             </md-option>
           </md-select>

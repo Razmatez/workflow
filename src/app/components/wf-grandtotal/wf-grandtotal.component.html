@@ -19,7 +19,9 @@
               <th>{{ d | date:"EEEE" }}</th>
             </ng-container>
             <th>Weekly Totals</th> -->
-            <th *ngFor="let ch of columnHeaders">{{ ch.Description }}</th>
+            <th *ngFor="let ch of columnHeaders"
+              [mdTooltip]="ch?.Description"
+              [mdTooltipPosition]="'above'">{{ ch.Code }}</th>
             <th>Pay value</th>
             <th>Bill value</th>
           </tr>

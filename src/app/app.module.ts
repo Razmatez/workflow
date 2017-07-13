@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocalStorageModule } from 'angular-2-local-storage';
 
 import { ElmsApiService } from './services/elms-api.service';
+import { EmployeePopupService } from './services/employee-popup.service';
 
 import { AppComponent } from './app.component';
 
@@ -28,7 +29,8 @@ import {
   MdDialogModule,
   MdButtonModule,
   MdSnackBarModule,
-  MdSelectModule
+  MdSelectModule,
+  MdTooltipModule
 } from '@angular/material';
 
 import { RateTypePipe } from './pipes/rate-type.pipe';
@@ -104,10 +106,12 @@ const appRoutes = [
     MdDialogModule,
     MdButtonModule,
     MdSnackBarModule,
-    MdSelectModule
+    MdSelectModule,
+    MdTooltipModule
   ],
   providers: [
-    ElmsApiService
+    ElmsApiService,
+    EmployeePopupService
   ],
   bootstrap: [AppComponent],
   entryComponents: [

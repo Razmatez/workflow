@@ -14,6 +14,8 @@ export class WfGrandtotalComponent implements OnInit {
   @Input() wfTemplateId: number;
   @Input() columnHeaders: any[];
 
+  timesheetsLoading: boolean;
+
   selectedDay: any;
 
   ts: any[];
@@ -35,11 +37,15 @@ export class WfGrandtotalComponent implements OnInit {
 
   time: any;
 
+  headerTolltipPos: string;
+
   constructor() { }
 
   ngOnInit() {
-
     this.time = {};
+    this.headerTolltipPos = 'above';
+
+    this.timesheetsLoading = false;
   }
 
 }

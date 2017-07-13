@@ -1,9 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { WorkflowComponent } from '../workflow/workflow.component';
-import { WfDailyComponent } from '../wf-daily/wf-daily.component';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
-
 
 @Component({
   selector: 'app-elms-timesheetpopup',
@@ -12,15 +8,19 @@ import { LocalStorageService } from 'angular-2-local-storage';
 })
 
 export class ElmsTimesheetpopupComponent implements OnInit {
-  contractOrderEmployeeID: number;
-  period: string;
+  @Output() closeComponent = new EventEmitter<string>();
+  @Input() contractOrderEmployeeID: number;
+  @Input() period: string;
+
+  loading: boolean;
+
   popupUrl: string;
 
   constructor(
-    public dialogRef: MdDialogRef<WfDailyComponent>,
     private localStorageService: LocalStorageService) { }
 
   ngOnInit() {
+    this.loading = true;
     if (this.localStorageService.isSupported) {
       if (this.localStorageService.get('token-elms') === null) {
         return;
@@ -33,6 +33,7 @@ export class ElmsTimesheetpopupComponent implements OnInit {
     this.popupUrl += `&Token=${this.localStorageService.get('token-elms')}`;
 
     console.log(this.popupUrl);
+    this.loading = false;
   }
 
 }

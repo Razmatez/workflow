@@ -1,2 +1,5 @@
+<p *ngIf="loading">Loading timesheet popup</p>
 
-<iframe width="1000px" height="600px" [src]="popupUrl | safeUrl"></iframe>
+<ng-container *ngIf="!loading">
+  <iframe width="99.8%" height="800px" [src]="popupUrl | safeUrl"></iframe>
+</ng-container>

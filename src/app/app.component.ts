@@ -5,6 +5,7 @@ import { LocalStorageService } from 'angular-2-local-storage';
 import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 
 import { ElmsApiService } from './services/elms-api.service';
+import { EmployeePopupService } from './services/employee-popup.service';
 
 import * as jspdf from 'jspdf';
 import * as $ from 'jquery';
@@ -35,14 +36,21 @@ export class AppComponent implements OnInit {
   structureID: number;
 
   addEmployee: boolean;
-  showTimesheetPopup: boolean;
+  timesheetPopup: any;
+
+
 
   constructor(
     private elmsApi: ElmsApiService,
+    private empPopup: EmployeePopupService,
     private route: ActivatedRoute,
     private router: Router,
     private localStorageService: LocalStorageService,
     public snackBar: MdSnackBar) {
+    // SERVICES
+    empPopup.showEmployeeRequest$.subscribe(val => {
+      this.openTimesheetPopup(val);
+    });
   }
 
   ngOnInit() {
@@ -64,7 +72,12 @@ export class AppComponent implements OnInit {
 
     this.structureID = -1
     this.addEmployee = false;
-    this.showTimesheetPopup = false;
+
+    this.timesheetPopup = {
+      'showTimesheetPopup': false,
+      'contractOrderEmployeeID': null,
+      'period': null
+    }
 
     if (!this.localStorageService.isSupported) {
       this.error = 'Local storage is not supported on this device.';
@@ -235,9 +248,12 @@ export class AppComponent implements OnInit {
       case 'elms-place-employee':
         this.addEmployee = false;
         break;
+      case 'elms-timesheetPopup':
+        this.timesheetPopup.showTimesheetPopup = false;
+        break;
       default:
         this.addEmployee = false;
-        this.showTimesheetPopup = false;
+        this.timesheetPopup.showTimesheetPopup = false;
         break;
 
     }
@@ -274,6 +290,20 @@ export class AppComponent implements OnInit {
         document.body.appendChild(iframe);
         iframe.src = pdfRes.output('datauristring');
     });*/
+  }
+
+  openTimesheetPopup(popupParams: any) {
+    this.timesheetPopup.period = popupParams.period;
+      this.timesheetPopup.contractOrderEmployeeID = popupParams.coeID;
+      this.timesheetPopup.showTimesheetPopup = true;
+
+      this.headerButtons = {
+          'save': false,
+          'add': false,
+          'approve': false,
+          'authorize': false,
+          'close': true
+        };
   }
 
 }

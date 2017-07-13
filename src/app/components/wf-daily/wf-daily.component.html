@@ -41,7 +41,9 @@
         <th>Start</th>
         <th>Break</th>
         <th>Finish</th>
-        <th *ngFor="let rt of columnHeaders">{{ rt.Description }}</th>
+        <th *ngFor="let rt of columnHeaders"
+          [mdTooltip]="rt?.Description"
+          [mdTooltipPosition]="'above'">{{ rt.Code }}</th>
         <th>Cost Centre</th>
         <th>Position</th>
         <th>Rategroup</th>

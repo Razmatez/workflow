@@ -6,6 +6,7 @@ import { LocalStorageService } from 'angular-2-local-storage';
   templateUrl: './elms-place-employee.component.html',
   styleUrls: ['./elms-place-employee.component.css']
 })
+
 export class ElmsPlaceEmployeeComponent implements OnInit {
   @Output() closeComponent = new EventEmitter<string>();
   @Input() structureID: number;

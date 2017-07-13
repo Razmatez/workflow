@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA} from '@angular/material';
 
 import { ElmsTimesheetpopupComponent } from '../elms-timesheetpopup/elms-timesheetpopup.component';
 
 import { ElmsApiService } from '../../services/elms-api.service';
+import { EmployeePopupService } from '../../services/employee-popup.service';
 
 import { TimesheetChanges, TimesheetTotal } from '../../models/TimesheetChanges';
 import { rateType } from '../../models/rateType';
@@ -18,6 +19,7 @@ import * as moment from 'moment';
 })
 export class WfDailyComponent implements OnInit {
   errorMessage: string;
+  @Output() openEmployeeTS = new EventEmitter<string>();
 
   @Input() timesheetsLoading: boolean;
   @Input() columnHeaders: any[];
@@ -48,8 +50,12 @@ export class WfDailyComponent implements OnInit {
   rategroups: any;
 
   time: any;
+  headerTolltipPos: string;
 
-  constructor(private elmsApi: ElmsApiService, public dialog: MdDialog) { }
+  constructor(
+      private elmsApi: ElmsApiService,
+      private empPopup: EmployeePopupService,
+      public dialog: MdDialog) { }
 
   ngOnInit() {
     this.costCentres = {};
@@ -57,21 +63,14 @@ export class WfDailyComponent implements OnInit {
     this.rategroups = {};
 
     this.time = {};
+    this.headerTolltipPos = 'above';
   }
 
   openDialog(t) {
-    const config = new MdDialogConfig();
-    const dialogRef = this.dialog.open(ElmsTimesheetpopupComponent, config);
-    dialogRef.afterClosed().subscribe(result => {
-
-    });
-
     const coeid = t.contractOrderEmployeeDetails.contractOrderEmployeeID;
     const period = moment(this.wfDays[0]).format('DD MMM YYYY') + ' to ' + moment(this.wfDays[0]).add(7, 'day').format('DD MMM YYYY')
 
-    dialogRef.componentInstance.contractOrderEmployeeID = coeid
-    dialogRef.componentInstance.period = period;
-    // dialogRef.componentInstance.period = '12 Jun 2017 to 18 Jun 2017';
+    this.empPopup.showEmployee(coeid, period);
   }
 
   selectDay(t) {

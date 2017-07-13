@@ -48,6 +48,7 @@ export class WfWeeklyComponent implements OnInit {
   rategroups: any;
 
   time: any;
+  headerTolltipPos: string;
 
   timesheets: any;
   timesheetsLoading: boolean;
@@ -60,6 +61,7 @@ export class WfWeeklyComponent implements OnInit {
     this.rategroups = {};
 
     this.time = {};
+    this.headerTolltipPos = 'above';
 
     this.timesheetsLoading = this.employee.timesheetsLoading;
     this.timesheets = this.employee.timesheets;
